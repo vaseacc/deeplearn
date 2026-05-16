@@ -5,7 +5,9 @@ import {
   onAuthStateChanged as firebaseOnAuthStateChanged,
   signInWithEmailAndPassword as firebaseSignIn,
   createUserWithEmailAndPassword as firebaseSignUp,
-  signOut as firebaseSignOut
+  signOut as firebaseSignOut,
+  GoogleAuthProvider,
+  signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
   getFirestore,
@@ -37,7 +39,7 @@ async function initFirebase() {
   await initPromise;
 }
 
-// Auth wrapper functions that ensure Firebase is initialized before use
+// ── Auth wrappers (ensure Firebase is initialised before use) ──
 async function onAuthStateChanged(callback) {
   await initFirebase();
   return firebaseOnAuthStateChanged(auth, callback);
@@ -58,7 +60,14 @@ async function signOut() {
   return firebaseSignOut(auth);
 }
 
-// Firestore helpers
+// Google sign‑in uses the imported provider class directly
+async function signInWithGoogle() {
+  await initFirebase();
+  const provider = new GoogleAuthProvider();
+  return signInWithPopup(auth, provider);
+}
+
+// ── Firestore helpers ──
 function defaultState() {
   return {
     xp: 0,
@@ -90,10 +99,15 @@ async function saveUserState(userId, state) {
 }
 
 export {
+  // Auth functions
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,       // class for creating providers (if needed elsewhere)
+  signInWithPopup,         // generic popup function (if needed elsewhere)
+  signInWithGoogle,        // convenient Google sign‑in helper
+  // Firestore helpers
   defaultState,
   loadUserState,
   saveUserState
