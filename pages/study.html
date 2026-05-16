@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Optimization - Lucid</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="animated-bg"><div class="particles"></div></div>
+  <nav class="nav"><div class="container nav-container"><a href="../index.html" class="nav-logo"><div class="nav-logo-icon">◈</div><span>Lucid</span></a>
+    <ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="dashboard.html">Dashboard</a></li><li><a href="focus.html">Focus</a></li><li><a href="clarity.html">Clarity</a></li><li><a href="study.html" class="active">Study</a></li><li><a href="overstimulation.html">Overstimulation</a></li><li><a href="coach.html">AI Coach</a></li><li><a href="analytics.html">Analytics</a></li><li><a href="settings.html">Settings</a></li></ul>
+    <div class="nav-actions"><button class="btn btn-secondary btn-sm">Profile</button><div class="nav-toggle"><span></span><span></span><span></span></div></div>
+  </div></nav>
+  <main style="padding-top:100px; padding-bottom:var(--spacing-xl);"><div class="container">
+    <div class="section-header mb-xl"><h2>Study Optimization</h2><p>Learn smarter, not harder. Active recall, spaced repetition & better habits.</p></div>
+    
+    <div class="grid grid-2">
+      <!-- Active Recall Trainer -->
+      <div class="card"><h3>📖 Active Recall Trainer</h3><p class="mb-md">Test yourself instead of rereading.</p>
+        <div id="flashcardContainer" class="flashcard show-front" onclick="flipCard()">
+          <div class="flashcard-front"><strong>Question:</strong><br>What is the capital of France?</div>
+          <div class="flashcard-back"><strong>Answer:</strong><br>Paris</div>
+        </div>
+        <div class="flex justify-between mt-md"><button class="btn btn-secondary btn-sm" onclick="prevCard()">◀ Previous</button><button class="btn btn-primary btn-sm" onclick="nextCard()">Next ▶</button></div>
+        <div class="mt-md"><button class="btn btn-outline btn-sm" onclick="addFlashcard()">+ Add New Card</button></div>
+        <p class="mt-md text-muted" style="font-size:0.75rem;">BACKEND TODO: Sync with user's study set.</p>
+      </div>
+
+      <!-- Spaced Repetition -->
+      <div class="card"><h3>🔄 Spaced Repetition</h3><p class="mb-md">Review before you forget.</p>
+        <div id="spacedList" class="mb-md"></div>
+        <button class="btn btn-secondary" onclick="addSpacedItem()">+ Add Topic to Review</button>
+        <p class="mt-md text-muted" style="font-size:0.75rem;">BACKEND TODO: Algorithm with due dates.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2 mt-xl">
+      <!-- Explain It Simply (AI) -->
+      <div class="card"><h3>🤔 Explain It Simply</h3><p class="mb-md">Get a clear, simple explanation.</p>
+        <textarea id="explainInput" class="input-field" rows="3" placeholder="Paste a complex concept or question..."></textarea>
+        <button class="btn btn-primary mt-md" onclick="explainSimply()">Simplify</button>
+        <div id="explainOutput" class="mt-md" style="background:var(--bg-tertiary); padding:var(--spacing-md); border-radius:var(--radius-md); display:none;"></div>
+        <p class="mt-md text-muted" style="font-size:0.75rem;">BACKEND TODO: Connect to LLM API for real simplification.</p>
+      </div>
+
+      <!-- Study Session Planner -->
+      <div class="card"><h3>📅 Study Session Planner</h3><p class="mb-md">Break large tasks into small chunks.</p>
+        <div class="input-group"><label class="input-label">What do you need to study?</label><input type="text" id="studyTask" class="input-field" placeholder="e.g., Biology chapter 5"></div>
+        <button class="btn btn-primary" onclick="planStudy()">Break it down</button>
+        <div id="studyPlanOutput" class="mt-md" style="background:var(--bg-tertiary); padding:var(--spacing-md); border-radius:var(--radius-md); display:none;"></div>
+      </div>
+    </div>
+  </div></main>
+  <script src="../js/main.js"></script>
+  <script>
+    let flashcards = [{ question: "What is the capital of France?", answer: "Paris" }, { question: "What is 2+2?", answer: "4" }];
+    let currentCard = 0;
+    function updateFlashcard() { const card = flashcards[currentCard]; document.querySelector('.flashcard-front').innerHTML = `<strong>Question:</strong><br>${card.question}`; document.querySelector('.flashcard-back').innerHTML = `<strong>Answer:</strong><br>${card.answer}`; document.querySelector('.flashcard').classList.remove('show-back', 'show-front'); document.querySelector('.flashcard').classList.add('show-front'); }
+    function flipCard() { const el = document.querySelector('.flashcard'); if(el.classList.contains('show-front')) { el.classList.remove('show-front'); el.classList.add('show-back'); } else { el.classList.remove('show-back'); el.classList.add('show-front'); } }
+    function nextCard() { currentCard = (currentCard + 1) % flashcards.length; updateFlashcard(); addXP(2); }
+    function prevCard() { currentCard = (currentCard - 1 + flashcards.length) % flashcards.length; updateFlashcard(); }
+    function addFlashcard() { let q = prompt("Question:"); let a = prompt("Answer:"); if(q && a) { flashcards.push({question:q, answer:a}); updateFlashcard(); } }
+    function explainSimply() { const txt = document.getElementById('explainInput').value; if(!txt) return; document.getElementById('explainOutput').style.display = 'block'; document.getElementById('explainOutput').innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>'; setTimeout(() => { document.getElementById('explainOutput').innerHTML = `<strong>Simplified:</strong><br>${txt.substring(0,150)}... (BACKEND TODO: Use AI to simplify this concept into plain language.)`; addXP(5); }, 1000); }
+    function planStudy() { const task = document.getElementById('studyTask').value; if(!task) return; const steps = [`1. Read introduction of ${task}`, `2. Take notes on key terms`, `3. Create 5 quiz questions`, `4. Explain it out loud`, `5. Review in 2 hours`]; document.getElementById('studyPlanOutput').style.display = 'block'; document.getElementById('studyPlanOutput').innerHTML = `<strong>Chunked plan:</strong><br>${steps.join('<br>')}`; addXP(3); }
+    function addSpacedItem() { let topic = prompt("Topic to review:"); if(topic){ const list = document.getElementById('spacedList'); const div = document.createElement('div'); div.className = 'spaced-item'; div.innerHTML = `<span>${topic}</span><button class="btn btn-sm btn-primary" onclick="reviewTopic(this)">Review now</button>`; list.appendChild(div); } }
+    function reviewTopic(btn) { btn.innerText = "Reviewed ✓"; btn.disabled = true; addXP(5); unlockAchievement('study_10'); }
+    updateFlashcard();
+  </script>
+</body>
+</html>
