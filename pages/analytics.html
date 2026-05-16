@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Analytics - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="focus.html">Focus</a></li>
+        <li><a href="clarity.html">Clarity</a></li>
+        <li><a href="coach.html">AI Coach</a></li>
+        <li><a href="analytics.html" class="active">Analytics</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Analytics Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
+    <div class="container">
+      <div class="section-header mb-xl">
+        <h2>Your Progress</h2>
+        <p>Visualize your journey toward better focus and mental clarity.</p>
+      </div>
+
+      <!-- Overview Stats -->
+      <div class="grid grid-4 mb-xl">
+        <div class="card stat-card">
+          <div class="stat-value">47</div>
+          <div class="stat-label">Total Focus Hours</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Current Streak</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value">89</div>
+          <div class="stat-label">Sessions Completed</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-value">73</div>
+          <div class="stat-label">Avg Clarity Score</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <!-- Focus Trends -->
+        <div class="card">
+          <h3 style="margin-bottom: var(--spacing-md);">Focus Trends</h3>
+          <div class="chart-container" style="height: 250px;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+              <p>Weekly focus time graph</p>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">BACKEND TODO: Connect to analytics API</p>
+            </div>
+          </div>
+          <div class="flex justify-between mt-md" style="font-size: 0.875rem; color: var(--text-secondary);">
+            <span>This week: 8h 32m</span>
+            <span style="color: var(--success);">↑ 12% from last week</span>
+          </div>
+        </div>
+
+        <!-- Clarity Score Changes -->
+        <div class="card">
+          <h3 style="margin-bottom: var(--spacing-md);">Clarity Score</h3>
+          <div class="chart-container" style="height: 250px;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
+              <p>Clarity score over time</p>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">BACKEND TODO: Connect to analytics API</p>
+            </div>
+          </div>
+          <div class="flex justify-between mt-md" style="font-size: 0.875rem; color: var(--text-secondary);">
+            <span>Avg: 73/100</span>
+            <span style="color: var(--success);">↑ 8 points this month</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Consistency -->
+      <div class="card mt-xl">
+        <h3 style="margin-bottom: var(--spacing-md);">Weekly Consistency</h3>
+        
+        <div style="display: flex; align-items: flex-end; gap: var(--spacing-sm); height: 200px; padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-lg);">
+          <!-- Demo bars -->
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 60%; background: var(--accent-gradient); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Mon</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 80%; background: var(--accent-gradient); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Tue</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 45%; background: var(--accent-gradient); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Wed</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 90%; background: var(--accent-gradient); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Thu</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 70%; background: var(--accent-gradient); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Fri</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 30%; background: var(--bg-card); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Sat</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--spacing-xs);">
+            <div style="width: 100%; height: 25%; background: var(--bg-card); border-radius: var(--radius-sm) var(--radius-sm) 0 0;"></div>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Sun</span>
+          </div>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          * BACKEND TODO: Render real data with a charting library (Chart.js, Recharts, etc.)
+        </p>
+      </div>
+
+      <!-- Streak History -->
+      <div class="card mt-xl">
+        <h3 style="margin-bottom: var(--spacing-md);">Streak History</h3>
+        
+        <div class="grid grid-3 gap-md mb-md">
+          <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--success);">12</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">Current Streak</div>
+          </div>
+          <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--accent-primary);">21</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">Best Streak</div>
+          </div>
+          <div style="text-align: center; padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--warning);">3</div>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">Times Broken</div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs);">
+          <!-- Streak bubbles -->
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">12</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text-muted);">✕</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">8</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">5</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text-muted);">✕</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">21</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--text-muted);">✕</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">7</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">4</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600;">3</div>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          * BACKEND TODO: Load actual streak history from database
+        </p>
+      </div>
+
+      <!-- Productivity Heatmap -->
+      <div class="card mt-xl">
+        <h3 style="margin-bottom: var(--spacing-md);">Activity Heatmap</h3>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+          Your focus activity over the past year
+        </p>
+        
+        <div style="overflow-x: auto;">
+          <div style="display: grid; grid-template-columns: repeat(52, 1fr); gap: 3px; min-width: 600px;">
+            <!-- Generate demo heatmap cells -->
+            <script>
+              // This is just for demo visualization
+              const levels = ['', 'level-1', 'level-2', 'level-3', 'level-4'];
+              for (let i = 0; i < 364; i++) {
+                const level = levels[Math.floor(Math.random() * levels.length)];
+                document.write(`<div class="heatmap-cell ${level}" title="Day ${i + 1}"></div>`);
+              }
+            </script>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-sm mt-md" style="justify-content: flex-end; font-size: 0.75rem; color: var(--text-muted);">
+          <span>Less</span>
+          <div class="heatmap-cell"></div>
+          <div class="heatmap-cell level-1"></div>
+          <div class="heatmap-cell level-2"></div>
+          <div class="heatmap-cell level-3"></div>
+          <div class="heatmap-cell level-4"></div>
+          <span>More</span>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          * BACKEND TODO: Generate from real session data
+        </p>
+      </div>
+
+      <!-- Achievements / Milestones -->
+      <div class="card mt-xl">
+        <h3 style="margin-bottom: var(--spacing-md);">Milestones</h3>
+        
+        <div class="grid grid-3 gap-md">
+          <div style="padding: var(--spacing-md); background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">🎯</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">First Session</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Completed your first focus session</div>
+          </div>
+          
+          <div style="padding: var(--spacing-md); background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">🔥</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">7-Day Streak</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Focused for 7 consecutive days</div>
+          </div>
+          
+          <div style="padding: var(--spacing-md); background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-md); text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">⏱️</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">10 Hours</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Accumulated 10 hours of focus</div>
+          </div>
+          
+          <div style="padding: var(--spacing-md); background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); text-align: center; opacity: 0.5;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">🧠</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">Clarity Master</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Maintain 80+ clarity for 30 days</div>
+          </div>
+          
+          <div style="padding: var(--spacing-md); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); text-align: center; opacity: 0.5;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">💪</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">30-Day Streak</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Focused for 30 consecutive days</div>
+          </div>
+          
+          <div style="padding: var(--spacing-md); background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: var(--radius-md); text-align: center; opacity: 0.5;">
+            <div style="font-size: 2rem; margin-bottom: var(--spacing-xs);">🏆</div>
+            <div style="font-weight: 600; margin-bottom: var(--spacing-xs);">100 Hours</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Accumulated 100 hours of focus</div>
+          </div>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          * BACKEND TODO: Track and award achievements based on user data
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

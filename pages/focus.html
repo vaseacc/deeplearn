@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Session - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="focus.html" class="active">Focus</a></li>
+        <li><a href="clarity.html">Clarity</a></li>
+        <li><a href="coach.html">AI Coach</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Focus Session Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl); min-height: calc(100vh - 100px); display: flex; align-items: center;">
+    <div class="container">
+      <!-- Setup View -->
+      <div id="setupView" class="card" style="max-width: 600px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: var(--spacing-md);">Start Focus Session</h2>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: var(--spacing-xl);">Configure your deep work session</p>
+        
+        <div class="input-group">
+          <label class="input-label">Session Goal</label>
+          <input type="text" class="input-field" placeholder="What will you focus on?" id="sessionGoal">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">Duration</label>
+          <div class="grid grid-3 gap-sm">
+            <button class="btn btn-secondary duration-btn" data-minutes="25">25 min</button>
+            <button class="btn btn-secondary duration-btn" data-minutes="45">45 min</button>
+            <button class="btn btn-secondary duration-btn" data-minutes="60">60 min</button>
+          </div>
+          <input type="hidden" id="selectedDuration" value="25">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">Background Sound (Optional)</label>
+          <select class="input-field" id="backgroundSound">
+            <option value="none">No Sound</option>
+            <option value="rain">Rain</option>
+            <option value="forest">Forest</option>
+            <option value="cafe">Café</option>
+            <option value="white-noise">White Noise</option>
+            <option value="waves">Ocean Waves</option>
+          </select>
+        </div>
+        
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Ambient Volume</span>
+            <span id="volumeValue" style="color: var(--text-primary);">50%</span>
+          </div>
+          <input type="range" class="slider" id="volumeSlider" min="0" max="100" value="50">
+        </div>
+        
+        <button class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-lg);" onclick="startSession()">Begin Session</button>
+        
+        <p style="text-align: center; font-size: 0.875rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          Tip: Close other tabs and silence notifications for best results
+        </p>
+      </div>
+
+      <!-- Active Session View -->
+      <div id="activeSessionView" class="hidden" style="max-width: 800px; margin: 0 auto; text-align: center;">
+        <div class="card">
+          <div id="sessionActiveContent">
+            <h3 id="activeGoal" style="color: var(--text-secondary); margin-bottom: var(--spacing-lg);">Working on: Study Session</h3>
+            
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            
+            <div class="flex justify-center gap-md mb-lg">
+              <button class="btn btn-secondary" onclick="toggleTimer()" id="playPauseBtn">⏸️ Pause</button>
+              <button class="btn btn-outline" onclick="endSession()">End Early</button>
+            </div>
+            
+            <div class="slider-container">
+              <div class="slider-label">
+                <span>Distractions Encountered</span>
+                <span id="distractionCount" style="color: var(--text-primary);">0</span>
+              </div>
+              <div class="flex justify-center gap-sm mt-sm">
+                <button class="btn btn-sm btn-secondary" onclick="addDistraction()">+1 Distraction</button>
+                <button class="btn btn-sm btn-secondary" onclick="resetDistractions()">Reset</button>
+              </div>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: var(--spacing-lg);">
+              Stay present. When your mind wanders, gently bring it back.
+            </p>
+          </div>
+          
+          <!-- Session Complete -->
+          <div id="sessionComplete" class="hidden session-complete">
+            <div class="session-complete-icon">✓</div>
+            <h2>Session Complete</h2>
+            <p style="margin: var(--spacing-md) 0;">Good work. Small consistency builds real focus.</p>
+            
+            <div class="grid grid-3 mb-lg">
+              <div class="stat-card">
+                <div class="stat-value" id="completeDuration">25</div>
+                <div class="stat-label">Minutes Focused</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="completeDistractions">0</div>
+                <div class="stat-label">Distractions</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="completeScore">95</div>
+                <div class="stat-label">Focus Score</div>
+              </div>
+            </div>
+            
+            <div class="flex justify-center gap-md">
+              <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+              <button class="btn btn-secondary" onclick="startAnotherSession()">Start Another</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Ambient Controls -->
+        <div class="card mt-lg" id="ambientControls">
+          <h4 style="margin-bottom: var(--spacing-sm);">Ambient Controls</h4>
+          <div class="flex justify-center gap-md items-center">
+            <button class="btn btn-sm btn-secondary" onclick="toggleFullscreen()">🖥️ Fullscreen</button>
+            <button class="btn btn-sm btn-secondary" onclick="toggleAmbient()">🔊 Toggle Sound</button>
+            <button class="btn btn-sm btn-secondary" onclick="showBreathingExercise()">🌬️ Breathing Exercise</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let timerInterval;
+    let timeRemaining = 25 * 60; // seconds
+    let isRunning = false;
+    let distractions = 0;
+    let selectedDuration = 25;
+
+    // Duration button selection
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('btn-primary'));
+        this.classList.add('btn-primary');
+        this.classList.remove('btn-secondary');
+        selectedDuration = parseInt(this.dataset.minutes);
+        document.getElementById('selectedDuration').value = selectedDuration;
+        timeRemaining = selectedDuration * 60;
+        updateTimerDisplay();
+      });
+    });
+
+    // Volume slider
+    document.getElementById('volumeSlider').addEventListener('input', function(e) {
+      document.getElementById('volumeValue').textContent = e.target.value + '%';
+    });
+
+    function startSession() {
+      const goal = document.getElementById('sessionGoal').value || 'Focus Session';
+      document.getElementById('activeGoal').textContent = 'Working on: ' + goal;
+      
+      document.getElementById('setupView').classList.add('hidden');
+      document.getElementById('activeSessionView').classList.remove('hidden');
+      
+      startTimer();
+    }
+
+    function startTimer() {
+      isRunning = true;
+      document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
+      
+      timerInterval = setInterval(() => {
+        if (timeRemaining > 0) {
+          timeRemaining--;
+          updateTimerDisplay();
+        } else {
+          completeSession();
+        }
+      }, 1000);
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        clearInterval(timerInterval);
+        isRunning = false;
+        document.getElementById('playPauseBtn').textContent = '▶️ Resume';
+      } else {
+        startTimer();
+      }
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      document.getElementById('timerDisplay').textContent = 
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function addDistraction() {
+      distractions++;
+      document.getElementById('distractionCount').textContent = distractions;
+    }
+
+    function resetDistractions() {
+      distractions = 0;
+      document.getElementById('distractionCount').textContent = '0';
+    }
+
+    function endSession() {
+      if (confirm('End session early? Your progress will be saved.')) {
+        completeSession();
+      }
+    }
+
+    function completeSession() {
+      clearInterval(timerInterval);
+      document.getElementById('sessionActiveContent').classList.add('hidden');
+      document.getElementById('sessionComplete').classList.remove('hidden');
+      document.getElementById('ambientControls').classList.add('hidden');
+      
+      // Update stats
+      const minutesFocused = selectedDuration - Math.floor(timeRemaining / 60);
+      document.getElementById('completeDuration').textContent = minutesFocused;
+      document.getElementById('completeDistractions').textContent = distractions;
+      
+      // Calculate focus score (simple algorithm for demo)
+      const baseScore = 100;
+      const distractionPenalty = distractions * 5;
+      const timeBonus = minutesFocused >= selectedDuration ? 10 : 0;
+      const score = Math.max(0, baseScore - distractionPenalty + timeBonus);
+      document.getElementById('completeScore').textContent = score;
+      
+      // BACKEND TODO: Save session data to database
+      console.log('BACKEND TODO: Save session:', {
+        duration: minutesFocused,
+        distractions: distractions,
+        score: score,
+        goal: document.getElementById('sessionGoal').value
+      });
+    }
+
+    function startAnotherSession() {
+      // Reset everything
+      timeRemaining = selectedDuration * 60;
+      distractions = 0;
+      isRunning = false;
+      
+      document.getElementById('sessionActiveContent').classList.remove('hidden');
+      document.getElementById('sessionComplete').classList.add('hidden');
+      document.getElementById('ambientControls').classList.remove('hidden');
+      document.getElementById('distractionCount').textContent = '0';
+      document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
+      
+      updateTimerDisplay();
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function toggleAmbient() {
+      // BACKEND TODO: Implement actual audio playback
+      alert('BACKEND TODO: Implement ambient sound playback');
+    }
+
+    function showBreathingExercise() {
+      // BACKEND TODO: Show breathing exercise modal
+      alert('BACKEND TODO: Show guided breathing exercise overlay');
+    }
+  </script>
+</body>
+</html>
