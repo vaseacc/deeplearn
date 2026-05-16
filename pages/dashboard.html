@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="focus.html">Focus</a></li>
+        <li><a href="clarity.html">Clarity</a></li>
+        <li><a href="coach.html">AI Coach</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
+    <div class="container">
+      <div class="dashboard-grid">
+        <!-- Main Dashboard -->
+        <div class="dashboard-main">
+          <!-- Welcome Card -->
+          <div class="card">
+            <div class="flex justify-between items-center mb-md">
+              <div>
+                <h2>Good morning</h2>
+                <p style="color: var(--text-secondary);">Ready to build focus today?</p>
+              </div>
+              <button class="btn btn-primary" onclick="window.location.href='focus.html'">Start Focus Session</button>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-3 mt-lg">
+              <div class="stat-card">
+                <div class="stat-value">2h 14m</div>
+                <div class="stat-label">Focused Today</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Day Streak</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">78</div>
+                <div class="stat-label">Clarity Score</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Goals -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Today's Goals</h3>
+            
+            <div class="input-group">
+              <div class="slider-label">
+                <span>Deep Work Sessions</span>
+                <span style="color: var(--text-primary);">2/3</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 66%;"></div>
+              </div>
+            </div>
+            
+            <div class="input-group">
+              <div class="slider-label">
+                <span>Mindfulness Practice</span>
+                <span style="color: var(--text-primary);">1/1</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+            
+            <div class="input-group">
+              <div class="slider-label">
+                <span>Digital Detox Hours</span>
+                <span style="color: var(--text-primary);">1.5/2</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Sessions -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Recent Sessions</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+              <div class="flex justify-between items-center" style="padding: var(--spacing-sm); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                <div>
+                  <h4 style="font-size: 0.9rem;">Deep Work - Study</h4>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Today, 9:00 AM</p>
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: var(--success); font-weight: 600;">45 min</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Excellent focus</div>
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center" style="padding: var(--spacing-sm); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                <div>
+                  <h4 style="font-size: 0.9rem;">Reading Session</h4>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Yesterday, 3:30 PM</p>
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: var(--success); font-weight: 600;">30 min</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Good focus</div>
+                </div>
+              </div>
+              
+              <div class="flex justify-between items-center" style="padding: var(--spacing-sm); background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                <div>
+                  <h4 style="font-size: 0.9rem;">Creative Writing</h4>
+                  <p style="font-size: 0.8rem; color: var(--text-muted);">Yesterday, 10:00 AM</p>
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: var(--warning); font-weight: 600;">20 min</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Some distractions</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar">
+          <!-- Mental Clarity Graph Placeholder -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Clarity Trend</h3>
+            <div class="chart-container" style="height: 200px;">
+              <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                <p style="font-size: 0.875rem;">Weekly clarity score graph</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">BACKEND TODO: Connect to analytics API</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Energy Check-in -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Energy Check-in</h3>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--spacing-md);">How are you feeling right now?</p>
+            
+            <div class="slider-container">
+              <div class="slider-label">
+                <span>Energy Level</span>
+                <span id="energyValue" style="color: var(--text-primary);">5/10</span>
+              </div>
+              <input type="range" class="slider" id="energySlider" min="1" max="10" value="5">
+            </div>
+            
+            <div class="slider-container">
+              <div class="slider-label">
+                <span>Focus Level</span>
+                <span id="focusValue" style="color: var(--text-primary);">6/10</span>
+              </div>
+              <input type="range" class="slider" id="focusSlider" min="1" max="10" value="6">
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-md);" onclick="alert('Check-in saved! (BACKEND TODO)')">Save Check-in</button>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Quick Actions</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+              <button class="btn btn-secondary" onclick="window.location.href='focus.html'">⏱️ Start Quick Focus</button>
+              <button class="btn btn-secondary" onclick="window.location.href='clarity.html'">📝 Log Mood</button>
+              <button class="btn btn-secondary" onclick="window.location.href='coach.html'">🤖 Ask AI Coach</button>
+              <button class="btn btn-secondary" onclick="window.location.href='analytics.html'">📈 View Progress</button>
+            </div>
+          </div>
+
+          <!-- Streak Calendar Placeholder -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Activity</h3>
+            <div class="heatmap" style="margin-top: var(--spacing-md);">
+              <!-- Demo heatmap cells -->
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-1"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-1"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell"></div>
+              <div class="heatmap-cell"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-1"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-1"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell level-3"></div>
+              <div class="heatmap-cell level-2"></div>
+              <div class="heatmap-cell level-4"></div>
+              <div class="heatmap-cell"></div>
+              <div class="heatmap-cell"></div>
+              <div class="heatmap-cell"></div>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-sm); text-align: center;">Last 35 days of activity</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Energy and Focus Slider Updates
+    document.getElementById('energySlider').addEventListener('input', function(e) {
+      document.getElementById('energyValue').textContent = e.target.value + '/10';
+    });
+    
+    document.getElementById('focusSlider').addEventListener('input', function(e) {
+      document.getElementById('focusValue').textContent = e.target.value + '/10';
+    });
+  </script>
+</body>
+</html>

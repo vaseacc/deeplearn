@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Coach - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="focus.html">Focus</a></li>
+        <li><a href="clarity.html">Clarity</a></li>
+        <li><a href="coach.html" class="active">AI Coach</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- AI Coach Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
+    <div class="container" style="max-width: 900px;">
+      <div class="section-header mb-xl">
+        <h2>AI Focus Coach</h2>
+        <p>Your personal guide for building focus, overcoming distractions, and achieving mental clarity.</p>
+      </div>
+
+      <div class="chat-container">
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <!-- Welcome Message -->
+          <div class="chat-message ai">
+            <p>Hi! I'm your AI focus coach. I'm here to help you build better focus habits, overcome distractions, and achieve your goals.</p>
+            <p style="margin-top: 0.5rem;">What would you like to work on today?</p>
+          </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="chat-messages hidden" id="loadingIndicator">
+          <div class="chat-message ai" style="max-width: 100px;">
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suggested Prompts -->
+        <div class="suggested-prompts">
+          <button class="prompt-chip" onclick="sendPrompt('Help me focus for studying')">📚 Help me focus for studying</button>
+          <button class="prompt-chip" onclick="sendPrompt('Break this task into smaller steps')">✂️ Break this task into smaller steps</button>
+          <button class="prompt-chip('I feel mentally overwhelmed')">😰 I feel mentally overwhelmed</button>
+          <button class="prompt-chip" onclick="sendPrompt('Quiz me on biology')">🧠 Quiz me on biology</button>
+          <button class="prompt-chip" onclick="sendPrompt('Tips for reducing phone addiction')">📱 Tips for reducing phone addiction</button>
+          <button class="prompt-chip" onclick="sendPrompt('Create a study schedule for me')">📅 Create a study schedule</button>
+        </div>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+          <input 
+            type="text" 
+            class="chat-input" 
+            id="chatInput" 
+            placeholder="Type your message..."
+            onkeypress="handleKeyPress(event)"
+          >
+          <button class="chat-send" id="sendButton" onclick="sendMessage()">
+            ➤
+          </button>
+        </div>
+      </div>
+
+      <!-- Info Box -->
+      <div class="card mt-xl">
+        <div class="flex items-center gap-md">
+          <div style="font-size: 2rem;">💡</div>
+          <div>
+            <h4 style="margin-bottom: var(--spacing-xs);">How to use your AI Coach</h4>
+            <p style="font-size: 0.875rem; margin: 0;">
+              Ask for help with focus strategies, task breakdown, motivation, study techniques, or anything related to building better mental habits. 
+              Your coach adapts to your needs and provides personalized guidance.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Backend Notice -->
+      <div class="card mt-lg" style="border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.05);">
+        <div class="flex items-center gap-md">
+          <div style="font-size: 1.5rem;">⚠️</div>
+          <div>
+            <h4 style="margin-bottom: var(--spacing-xs); color: var(--warning);">Backend Integration Required</h4>
+            <p style="font-size: 0.875rem; margin: 0; color: var(--text-secondary);">
+              This is a frontend demo. To enable real AI conversations, connect to an LLM API backend.
+              See the code comments for integration points.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const sendButton = document.getElementById('sendButton');
+
+    // Demo responses (BACKEND TODO: Replace with actual AI API calls)
+    const demoResponses = {
+      'help me focus for studying': "Here's a strategy to help you focus on studying:\n\n1. **Set a clear intention**: What specific topic will you study?\n2. **Use the Pomodoro technique**: 25 minutes of focused work, then a 5-minute break\n3. **Remove distractions**: Put your phone in another room, close unnecessary tabs\n4. **Start small**: Commit to just 5 minutes. Often, starting is the hardest part.\n\nWould you like me to help you set up a focus session?",
+      
+      'break this task into smaller steps': "I'd be happy to help you break down a task! Could you tell me:\n\n1. What's the main task you're working on?\n2. What's your deadline?\n3. What resources do you have available?\n\nOnce I know more, I can create a step-by-step plan that feels manageable.",
+      
+      'i feel mentally overwhelmed': "I hear you, and it's completely okay to feel overwhelmed sometimes. Let's take this one step at a time:\n\n**First, let's pause:**\n- Take 3 deep breaths with me\n- Acknowledge that you're doing your best\n\n**Then, let's simplify:**\n- What's the ONE most important thing you need to do right now?\n- Can everything else wait for later?\n\n**Remember:**\n- You don't have to do everything at once\n- Progress, not perfection\n- It's okay to ask for help\n\nWould you like to talk about what's overwhelming you, or would you prefer a simple action to start with?",
+      
+      'quiz me on biology': "Great! Let's do a biology quiz. I'll start with something foundational:\n\n**Question 1:** What is the powerhouse of the cell?\n\nA) Nucleus\nB) Mitochondria\nC) Ribosome\nD) Endoplasmic Reticulum\n\nTake your time! When you're ready, tell me your answer and I'll provide feedback.",
+      
+      'tips for reducing phone addiction': "Reducing phone addiction is a common challenge. Here are evidence-based strategies:\n\n**Physical Barriers:**\n• Keep your phone in another room during focus sessions\n• Use a physical alarm clock instead of your phone\n• Charge your phone outside the bedroom\n\n**Digital Boundaries:**\n• Set app time limits (iOS Screen Time / Android Digital Wellbeing)\n• Turn off non-essential notifications\n• Use grayscale mode to reduce visual appeal\n\n**Behavioral Changes:**\n• Designate specific times to check your phone\n• Replace the habit: when you reach for your phone, do 3 deep breaths instead\n• Track your usage to build awareness\n\n**Mindset Shift:**\n• Remember: apps are designed to be addictive. You're not weak—you're fighting sophisticated engineering.\n\nWhich strategy feels most doable for you right now?",
+      
+      'create a study schedule': "I'd love to help you create a study schedule! To make it realistic and effective, I need to know:\n\n1. **What subjects** are you studying?\n2. **How many hours** per day can you realistically commit?\n3. **When** are you most alert? (morning/afternoon/evening)\n4. **Any deadlines** or exam dates?\n5. **Other commitments** (work, classes, etc.)?\n\nShare what you can, and I'll build a personalized schedule that works with your life, not against it."
+    };
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function sendPrompt(prompt) {
+      chatInput.value = prompt;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+
+      // Disable input while processing
+      chatInput.disabled = true;
+      sendButton.disabled = true;
+
+      // Add user message
+      addMessage(message, 'user');
+      chatInput.value = '';
+
+      // Show loading
+      loadingIndicator.classList.remove('hidden');
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // BACKEND TODO: Replace with actual API call
+      setTimeout(() => {
+        // Simulate AI response
+        const response = getDemoResponse(message);
+        
+        loadingIndicator.classList.add('hidden');
+        addMessage(response, 'ai');
+        
+        // Re-enable input
+        chatInput.disabled = false;
+        sendButton.disabled = false;
+        chatInput.focus();
+      }, 1500 + Math.random() * 1000); // Random delay between 1.5-2.5 seconds
+    }
+
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${sender}`;
+      
+      // Convert markdown-style formatting to HTML
+      let formattedText = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n\n/g, '</p><p style="margin-top: 0.5rem;">')
+        .replace(/\n• /g, '<br>• ')
+        .replace(/\n- /g, '<br>- ')
+        .replace(/\n\d\./g, '<br>$&');
+      
+      messageDiv.innerHTML = `<p>${formattedText}</p>`;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getDemoResponse(message) {
+      const lowerMessage = message.toLowerCase();
+      
+      // Simple keyword matching for demo
+      for (const [key, response] of Object.entries(demoResponses)) {
+        if (lowerMessage.includes(key)) {
+          return response;
+        }
+      }
+      
+      // Default response
+      return "Thanks for sharing! I'm here to support you on your focus journey.\n\n**BACKEND TODO:** Connect to an LLM API (like OpenAI, Anthropic, or open-source alternatives) to provide intelligent, contextual responses.\n\nFor now, try asking about:\n• Study strategies\n• Task breakdown\n• Managing overwhelm\n• Building habits\n• Reducing distractions";
+    }
+
+    /*
+    ================================================================
+    BACKEND INTEGRATION GUIDE
+    ================================================================
+    
+    To connect this to a real AI backend:
+    
+    1. Replace the sendMessage() function with an API call:
+    
+    async function sendMessage() {
+      const message = chatInput.value.trim();
+      if (!message) return;
+      
+      chatInput.disabled = true;
+      sendButton.disabled = true;
+      
+      addMessage(message, 'user');
+      chatInput.value = '';
+      loadingIndicator.classList.remove('hidden');
+      
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            conversationHistory: getConversationHistory()
+          })
+        });
+        
+        const data = await response.json();
+        addMessage(data.response, 'ai');
+      } catch (error) {
+        addMessage('Sorry, I encountered an error. Please try again.', 'ai');
+        console.error('Chat error:', error);
+      }
+      
+      loadingIndicator.classList.add('hidden');
+      chatInput.disabled = false;
+      sendButton.disabled = false;
+      chatInput.focus();
+    }
+    
+    2. Implement conversation history tracking
+    
+    3. Set up your backend API endpoint
+    
+    ================================================================
+    */
+  </script>
+</body>
+</html>

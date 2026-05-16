@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mental Clarity Tracker - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="focus.html">Focus</a></li>
+        <li><a href="clarity.html" class="active">Clarity</a></li>
+        <li><a href="coach.html">AI Coach</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Clarity Tracker Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
+    <div class="container">
+      <div class="section-header mb-xl">
+        <h2>Mental Clarity Tracker</h2>
+        <p>Reflect on your mental state and understand how your habits affect focus.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <!-- Daily Check-in Form -->
+        <div class="card">
+          <h3 style="margin-bottom: var(--spacing-lg);">Daily Check-in</h3>
+          
+          <div class="slider-container">
+            <div class="slider-label">
+              <span>🧠 Mental Clarity</span>
+              <span id="clarityValue" style="color: var(--text-primary);">5/10</span>
+            </div>
+            <input type="range" class="slider" id="claritySlider" min="1" max="10" value="5">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-xs);">How clear and sharp does your mind feel?</p>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-label">
+              <span>😊 Mood</span>
+              <span id="moodValue" style="color: var(--text-primary);">6/10</span>
+            </div>
+            <input type="range" class="slider" id="moodSlider" min="1" max="10" value="6">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-xs);">Overall emotional state today</p>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-label">
+              <span>⚡ Energy Level</span>
+              <span id="energyValue" style="color: var(--text-primary);">5/10</span>
+            </div>
+            <input type="range" class="slider" id="energySlider" min="1" max="10" value="5">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-xs);">Physical and mental energy</p>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-label">
+              <span>😴 Sleep Quality</span>
+              <span id="sleepValue" style="color: var(--text-primary);">6/10</span>
+            </div>
+            <input type="range" class="slider" id="sleepSlider" min="1" max="10" value="6">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-xs);">How well did you sleep last night?</p>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-label">
+              <span>📱 Screen Time Estimate</span>
+              <span id="screenValue" style="color: var(--text-primary);">4 hours</span>
+            </div>
+            <input type="range" class="slider" id="screenSlider" min="0" max="12" value="4" step="0.5">
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-xs);">Estimated hours of recreational screen time</p>
+          </div>
+
+          <div class="input-group mt-md">
+            <label class="input-label">Notes (Optional)</label>
+            <textarea class="input-field" rows="3" placeholder="Anything affecting your focus today?" style="resize: vertical;"></textarea>
+          </div>
+
+          <button class="btn btn-primary" style="width: 100%; margin-top: var(--spacing-md);" onclick="saveCheckIn()">Save Check-in</button>
+        </div>
+
+        <!-- Insights Panel -->
+        <div class="dashboard-sidebar">
+          <!-- Today's Summary -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Today's Summary</h3>
+            
+            <div class="grid grid-2 gap-md mb-md">
+              <div class="stat-card">
+                <div class="stat-value" style="font-size: 1.5rem;">6.2</div>
+                <div class="stat-label">Avg Clarity</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" style="font-size: 1.5rem;">7</div>
+                <div class="stat-label">Day Streak</div>
+              </div>
+            </div>
+
+            <div style="background: var(--bg-tertiary); padding: var(--spacing-md); border-radius: var(--radius-md);">
+              <p style="font-size: 0.875rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary);">Insight:</strong> Your clarity scores tend to be 20% higher on days with less than 3 hours of screen time.
+              </p>
+            </div>
+          </div>
+
+          <!-- Weekly Trends Placeholder -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Weekly Trends</h3>
+            <div class="chart-container" style="height: 200px;">
+              <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📈</div>
+                <p style="font-size: 0.875rem;">Clarity & mood trends</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">BACKEND TODO: Connect to analytics API</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Correlations -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Habit Correlations</h3>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+              How your habits affect your focus (based on your data)
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+              <div>
+                <div class="flex justify-between mb-sm">
+                  <span style="font-size: 0.875rem;">Sleep Quality → Focus</span>
+                  <span style="color: var(--success); font-size: 0.875rem;">+35%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 35%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-sm">
+                  <span style="font-size: 0.875rem;">Screen Time → Clarity</span>
+                  <span style="color: var(--error); font-size: 0.875rem;">-28%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 28%; background: var(--error);"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-sm">
+                  <span style="font-size: 0.875rem;">Exercise → Energy</span>
+                  <span style="color: var(--success); font-size: 0.875rem;">+42%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 42%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-sm">
+                  <span style="font-size: 0.875rem;">Meditation → Mood</span>
+                  <span style="color: var(--success); font-size: 0.875rem;">+25%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 25%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+              * BACKEND TODO: Calculate real correlations from user data
+            </p>
+          </div>
+
+          <!-- Quick Tips -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-md);">Personalized Tips</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+              <div style="padding: var(--spacing-sm); background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--success); border-radius: var(--radius-sm);">
+                <p style="font-size: 0.875rem;">Your focus is best in the morning. Consider scheduling deep work before noon.</p>
+              </div>
+              
+              <div style="padding: var(--spacing-sm); background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning); border-radius: var(--radius-sm);">
+                <p style="font-size: 0.875rem;">Screen time after 10 PM correlates with lower clarity scores the next day.</p>
+              </div>
+              
+              <div style="padding: var(--spacing-sm); background: rgba(99, 102, 241, 0.1); border-left: 3px solid var(--accent-primary); border-radius: var(--radius-sm);">
+                <p style="font-size: 0.875rem;">Try a 5-minute breathing exercise when your energy drops below 4/10.</p>
+              </div>
+            </div>
+
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+              * BACKEND TODO: Generate tips based on actual user patterns
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Section -->
+      <div class="card mt-xl">
+        <h3 style="margin-bottom: var(--spacing-md);">Recent Check-ins</h3>
+        
+        <div style="overflow-x: auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--glass-border); text-align: left;">
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Date</th>
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Clarity</th>
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Mood</th>
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Energy</th>
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Sleep</th>
+                <th style="padding: var(--spacing-sm); color: var(--text-secondary);">Screen Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: var(--spacing-sm);">Today</td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">5/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">6/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">5/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">6/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">4h</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: var(--spacing-sm);">Yesterday</td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">7/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">8/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">6/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">8/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">2h</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: var(--spacing-sm);">2 days ago</td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">6/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">6/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">4/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--accent-primary);">5/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">6h</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--glass-border);">
+                <td style="padding: var(--spacing-sm);">3 days ago</td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">8/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">7/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">7/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">7/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--success);">1h</span></td>
+              </tr>
+              <tr>
+                <td style="padding: var(--spacing-sm);">4 days ago</td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">4/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">5/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">4/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--warning);">4/10</span></td>
+                <td style="padding: var(--spacing-sm);"><span style="color: var(--error);">8h</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          * BACKEND TODO: Load real check-in history from database
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Slider value updates
+    document.getElementById('claritySlider').addEventListener('input', function(e) {
+      document.getElementById('clarityValue').textContent = e.target.value + '/10';
+    });
+
+    document.getElementById('moodSlider').addEventListener('input', function(e) {
+      document.getElementById('moodValue').textContent = e.target.value + '/10';
+    });
+
+    document.getElementById('energySlider').addEventListener('input', function(e) {
+      document.getElementById('energyValue').textContent = e.target.value + '/10';
+    });
+
+    document.getElementById('sleepSlider').addEventListener('input', function(e) {
+      document.getElementById('sleepValue').textContent = e.target.value + '/10';
+    });
+
+    document.getElementById('screenSlider').addEventListener('input', function(e) {
+      document.getElementById('screenValue').textContent = e.target.value + ' hours';
+    });
+
+    function saveCheckIn() {
+      const checkInData = {
+        clarity: document.getElementById('claritySlider').value,
+        mood: document.getElementById('moodSlider').value,
+        energy: document.getElementById('energySlider').value,
+        sleep: document.getElementById('sleepSlider').value,
+        screenTime: document.getElementById('screenSlider').value,
+        notes: document.querySelector('textarea').value,
+        timestamp: new Date().toISOString()
+      };
+
+      // BACKEND TODO: Save to database
+      console.log('BACKEND TODO: Save check-in:', checkInData);
+      
+      alert('Check-in saved! (BACKEND TODO: Implement actual save)');
+    }
+  </script>
+</body>
+</html>

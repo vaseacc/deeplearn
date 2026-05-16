@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Lucid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="particles" id="particles"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav-container">
+      <a href="../index.html" class="nav-logo">
+        <div class="nav-logo-icon">◈</div>
+        <span>Lucid</span>
+      </a>
+      
+      <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="focus.html">Focus</a></li>
+        <li><a href="clarity.html">Clarity</a></li>
+        <li><a href="coach.html">AI Coach</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="settings.html" class="active">Settings</a></li>
+      </ul>
+      
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-sm">Profile</button>
+        <div class="nav-toggle" id="navToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Settings Content -->
+  <main style="padding-top: 100px; padding-bottom: var(--spacing-xl);">
+    <div class="container" style="max-width: 800px;">
+      <div class="section-header mb-xl">
+        <h2>Settings</h2>
+        <p>Customize your experience to fit your needs.</p>
+      </div>
+
+      <!-- Appearance -->
+      <div class="card settings-section">
+        <h3>Appearance</h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Dark Mode</h4>
+            <p>Use dark theme for reduced eye strain</p>
+          </div>
+          <div class="toggle active" id="darkModeToggle" onclick="toggleDarkMode()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Reduce Motion</h4>
+            <p>Minimize animations and transitions</p>
+          </div>
+          <div class="toggle" id="reduceMotionToggle" onclick="toggleReduceMotion()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>High Contrast</h4>
+            <p>Increase contrast for better visibility</p>
+          </div>
+          <div class="toggle" id="highContrastToggle" onclick="toggleHighContrast()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility -->
+      <div class="card settings-section">
+        <h3>Accessibility</h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Dyslexia-Friendly Mode</h4>
+            <p>Increased spacing and dyslexia-friendly typography for improved readability</p>
+          </div>
+          <div class="toggle" id="dyslexiaModeToggle" onclick="toggleDyslexiaMode()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Large Text</h4>
+            <p>Increase font size throughout the app</p>
+          </div>
+          <div class="toggle" id="largeTextToggle" onclick="toggleLargeText()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Screen Reader Optimized</h4>
+            <p>Enhanced ARIA labels and semantic structure</p>
+          </div>
+          <div class="toggle active" id="screenReaderToggle" onclick="toggleScreenReader()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Focus Preferences -->
+      <div class="card settings-section">
+        <h3>Focus Preferences</h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Default Session Duration</h4>
+            <p>Standard length for focus sessions</p>
+          </div>
+          <select class="input-field" style="width: auto; min-width: 150px;" id="defaultDuration">
+            <option value="15">15 minutes</option>
+            <option value="25" selected>25 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Break Reminder</h4>
+            <p>Get reminded to take breaks during long sessions</p>
+          </div>
+          <div class="toggle active" id="breakReminderToggle" onclick="toggleBreakReminder()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Strict Mode</h4>
+            <p>Block access to other pages during focus sessions</p>
+          </div>
+          <div class="toggle" id="strictModeToggle" onclick="toggleStrictMode()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Auto-start Break Timer</h4>
+            <p>Automatically start break timer after session ends</p>
+          </div>
+          <div class="toggle" id="autoBreakToggle" onclick="toggleAutoBreak()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="card settings-section">
+        <h3>Notifications</h3>
+        <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--spacing-md);">
+          BACKEND TODO: Implement actual notification system
+        </p>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Session Reminders</h4>
+            <p>Get notified to start a focus session</p>
+          </div>
+          <div class="toggle" id="sessionReminderToggle" onclick="toggleSessionReminder()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Daily Check-in Reminder</h4>
+            <p>Remind you to log your mental clarity</p>
+          </div>
+          <div class="toggle active" id="checkinReminderToggle" onclick="toggleCheckinReminder()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Streak Protection</h4>
+            <p>Alert when you're about to lose your streak</p>
+          </div>
+          <div class="toggle active" id="streakAlertToggle" onclick="toggleStreakAlert()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Achievement Notifications</h4>
+            <p>Celebrate when you reach milestones</p>
+          </div>
+          <div class="toggle active" id="achievementToggle" onclick="toggleAchievementNotifs()">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data & Privacy -->
+      <div class="card settings-section">
+        <h3>Data & Privacy</h3>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Export Data</h4>
+            <p>Download all your focus sessions and check-ins</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="exportData()">Export</button>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Clear Local Data</h4>
+            <p>Remove locally stored preferences and cache</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearLocalData()" style="border-color: var(--error); color: var(--error);">Clear</button>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <h4>Delete Account</h4>
+            <p>Permanently delete your account and all data</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="deleteAccount()" style="border-color: var(--error); color: var(--error);">Delete</button>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: var(--spacing-md);">
+          BACKEND TODO: Implement data export, clear, and account deletion functionality
+        </p>
+      </div>
+
+      <!-- About -->
+      <div class="card settings-section">
+        <h3>About Lucid</h3>
+        
+        <div style="padding: var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: var(--spacing-md);">
+          <div class="flex items-center gap-md mb-md">
+            <div class="nav-logo-icon" style="width: 50px; height: 50px; font-size: 1.5rem;">◈</div>
+            <div>
+              <h4 style="margin-bottom: var(--spacing-xs);">Lucid</h4>
+              <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Version 1.0.0 (Frontend Demo)</p>
+            </div>
+          </div>
+          
+          <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.8;">
+            Lucid helps users rebuild focus and mental clarity in a hyper-distracting world. 
+            Built with evidence-based techniques and a calm, supportive approach.
+          </p>
+        </div>
+        
+        <div class="grid grid-2 gap-md">
+          <a href="#" class="btn btn-secondary" style="justify-content: center;">View Source Code</a>
+          <a href="#" class="btn btn-secondary" style="justify-content: center;">Report a Bug</a>
+        </div>
+      </div>
+
+      <!-- Save Button -->
+      <div class="flex justify-end mt-xl">
+        <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Settings state
+    const settings = {
+      darkMode: true,
+      reduceMotion: false,
+      highContrast: false,
+      dyslexiaMode: false,
+      largeText: false,
+      screenReaderOptimized: true,
+      defaultDuration: 25,
+      breakReminder: true,
+      strictMode: false,
+      autoBreak: false,
+      sessionReminder: false,
+      checkinReminder: true,
+      streakAlert: true,
+      achievementNotifs: true
+    };
+
+    // Toggle functions
+    function toggleDarkMode() {
+      settings.darkMode = !settings.darkMode;
+      document.getElementById('darkModeToggle').classList.toggle('active', settings.darkMode);
+    }
+
+    function toggleReduceMotion() {
+      settings.reduceMotion = !settings.reduceMotion;
+      document.getElementById('reduceMotionToggle').classList.toggle('active', settings.reduceMotion);
+      document.body.style.setProperty('--transition-normal', settings.reduceMotion ? '0s' : '0.3s');
+    }
+
+    function toggleHighContrast() {
+      settings.highContrast = !settings.highContrast;
+      document.getElementById('highContrastToggle').classList.toggle('active', settings.highContrast);
+      document.body.classList.toggle('high-contrast', settings.highContrast);
+    }
+
+    function toggleDyslexiaMode() {
+      settings.dyslexiaMode = !settings.dyslexiaMode;
+      document.getElementById('dyslexiaModeToggle').classList.toggle('active', settings.dyslexiaMode);
+      document.body.classList.toggle('dyslexia-mode', settings.dyslexiaMode);
+    }
+
+    function toggleLargeText() {
+      settings.largeText = !settings.largeText;
+      document.getElementById('largeTextToggle').classList.toggle('active', settings.largeText);
+      document.documentElement.style.fontSize = settings.largeText ? '18px' : '16px';
+    }
+
+    function toggleScreenReader() {
+      settings.screenReaderOptimized = !settings.screenReaderOptimized;
+      document.getElementById('screenReaderToggle').classList.toggle('active', settings.screenReaderOptimized);
+    }
+
+    function toggleBreakReminder() {
+      settings.breakReminder = !settings.breakReminder;
+      document.getElementById('breakReminderToggle').classList.toggle('active', settings.breakReminder);
+    }
+
+    function toggleStrictMode() {
+      settings.strictMode = !settings.strictMode;
+      document.getElementById('strictModeToggle').classList.toggle('active', settings.strictMode);
+    }
+
+    function toggleAutoBreak() {
+      settings.autoBreak = !settings.autoBreak;
+      document.getElementById('autoBreakToggle').classList.toggle('active', settings.autoBreak);
+    }
+
+    function toggleSessionReminder() {
+      settings.sessionReminder = !settings.sessionReminder;
+      document.getElementById('sessionReminderToggle').classList.toggle('active', settings.sessionReminder);
+    }
+
+    function toggleCheckinReminder() {
+      settings.checkinReminder = !settings.checkinReminder;
+      document.getElementById('checkinReminderToggle').classList.toggle('active', settings.checkinReminder);
+    }
+
+    function toggleStreakAlert() {
+      settings.streakAlert = !settings.streakAlert;
+      document.getElementById('streakAlertToggle').classList.toggle('active', settings.streakAlert);
+    }
+
+    function toggleAchievementNotifs() {
+      settings.achievementNotifs = !settings.achievementNotifs;
+      document.getElementById('achievementToggle').classList.toggle('active', settings.achievementNotifs);
+    }
+
+    function saveSettings() {
+      // BACKEND TODO: Save settings to database
+      localStorage.setItem('lucidSettings', JSON.stringify(settings));
+      alert('Settings saved! (BACKEND TODO: Sync with server)');
+    }
+
+    function exportData() {
+      // BACKEND TODO: Export user data
+      alert('BACKEND TODO: Generate and download user data export');
+    }
+
+    function clearLocalData() {
+      if (confirm('Are you sure? This will clear all locally stored settings.')) {
+        localStorage.removeItem('lucidSettings');
+        location.reload();
+      }
+    }
+
+    function deleteAccount() {
+      // BACKEND TODO: Implement account deletion
+      alert('BACKEND TODO: Implement secure account deletion flow with confirmation');
+    }
+
+    // Load saved settings on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedSettings = localStorage.getItem('lucidSettings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        Object.assign(settings, parsed);
+        
+        // Apply settings
+        if (settings.dyslexiaMode) document.body.classList.add('dyslexia-mode');
+        if (settings.largeText) document.documentElement.style.fontSize = '18px';
+        if (settings.reduceMotion) document.body.style.setProperty('--transition-normal', '0s');
+      }
+    });
+  </script>
+</body>
+</html>
