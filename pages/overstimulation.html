@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Overstimulation - Lucid</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="animated-bg"></div>
+  <nav class="nav"><div class="container nav-container"><a href="../index.html" class="nav-logo"><div class="nav-logo-icon">◈</div><span>Lucid</span></a>
+    <ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="dashboard.html">Dashboard</a></li><li><a href="focus.html">Focus</a></li><li><a href="clarity.html">Clarity</a></li><li><a href="study.html">Study</a></li><li><a href="overstimulation.html" class="active">Overstimulation</a></li><li><a href="coach.html">AI Coach</a></li><li><a href="analytics.html">Analytics</a></li><li><a href="settings.html">Settings</a></li></ul><div class="nav-actions"><button class="btn btn-secondary btn-sm">Profile</button><div class="nav-toggle"><span></span><span></span><span></span></div></div>
+  </div></nav>
+  <main style="padding-top:100px;"><div class="container">
+    <div class="section-header mb-xl"><h2>Digital Overstimulation Tracker</h2><p>Build awareness, not guilt. Reclaim your attention.</p></div>
+    <div class="grid grid-2">
+      <div class="card"><h3>📱 Scrolling Awareness</h3><div class="input-group"><label class="input-label">Estimated TikTok/Reels/Shorts time today (hours)</label><input type="number" id="scrollHours" class="input-field" min="0" max="12" step="0.5" value="2"></div><button class="btn btn-primary mt-sm" onclick="logScrolling()">Log today</button><div id="scrollHistory" class="mt-md"></div></div>
+      <div class="card"><h3>⚖️ Dopamine Balance</h3><div class="dopamine-gauge"><div class="gauge-fill" id="dopamineFill"></div><div class="gauge-value" id="dopamineValue">50%</div></div><p class="text-center mt-sm">Lower = overstimulated, Higher = balanced</p><button class="btn btn-secondary btn-sm" onclick="rebalanceTip()">Get recovery tip</button><div id="rebalanceMsg" class="mt-md"></div></div>
+    </div>
+    <div class="grid grid-2 mt-xl">
+      <div class="card"><h3>🔥 Reduced Stimulation Challenges</h3><div id="challengeList"></div><button class="btn btn-outline" onclick="completeChallenge()">✓ Mark completed</button><div class="mt-md" id="streakDisplay">Current streak: 0 days</div></div>
+      <div class="card"><h3>📉 Attention Recovery Progress</h3><div class="progress-bar"><div class="progress-fill" id="recoveryFill" style="width:0%"></div></div><p id="recoveryText" class="mt-sm"></p><button class="btn btn-secondary mt-md" onclick="resetOverstimulation()">Start fresh week</button></div>
+    </div>
+  </div></main>
+  <script src="../js/main.js"></script>
+  <script>
+    let totalScroll = 0; let streak = parseInt(localStorage.getItem('attentionStreak')||'0'); let challenges = ['No reels before sleep','1 hour distraction-free morning','Phone-free study block','Only text-based social for 1 day'];
+    function updateUI() { let hours = parseFloat(document.getElementById('scrollHours').value)||0; let dopamine = Math.max(0, Math.min(100, 100 - (hours*8))); document.getElementById('dopamineFill').style.background = `conic-gradient(var(--error) 0deg, var(--warning) ${dopamine*3.6}deg, var(--success) 360deg)`; document.getElementById('dopamineValue').innerText = Math.floor(dopamine)+'%'; let recovery = Math.min(100, streak*5); document.getElementById('recoveryFill').style.width = recovery+'%'; document.getElementById('recoveryText').innerText = `Recovery level: ${recovery}% — keep going!`; document.getElementById('streakDisplay').innerHTML = `Current streak: ${streak} days without overstimulation`; }
+    function logScrolling() { let val = parseFloat(document.getElementById('scrollHours').value); totalScroll += val; addXP(Math.max(0,10 - Math.floor(val*2))); if(val > 3) showNotification('High scrolling detected. Try a short walk or deep breathing.','warning'); else if(val < 1) { streak++; localStorage.setItem('attentionStreak',streak); unlockAchievement('streak_7'); } updateUI(); }
+    function rebalanceTip() { document.getElementById('rebalanceMsg').innerHTML = '<div class="recovery-tip">🌿 Tip: 5 minutes of silent sitting or looking out a window resets dopamine sensitivity.</div>'; }
+    function completeChallenge() { streak++; localStorage.setItem('attentionStreak',streak); updateUI(); addXP(10); if(streak>=7) unlockAchievement('streak_7'); }
+    function resetOverstimulation() { streak=0; localStorage.setItem('attentionStreak',0); updateUI(); }
+    function renderChallenges() { let html=''; challenges.forEach(c=>{ html+=`<div class="challenge-card">${c}</div>`; }); document.getElementById('challengeList').innerHTML=html; }
+    updateUI(); renderChallenges();
+  </script>
+</body>
+</html>
