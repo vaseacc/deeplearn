@@ -1,238 +1,111 @@
-/**
- * Lucid - Main JavaScript
- * Shared functionality across all pages
- */
+// ========== GAMIFICATION & PERSISTENCE ==========
 
-// Particle animation for background
-function createParticles() {
-  const particlesContainer = document.getElementById('particles');
-  if (!particlesContainer) return;
-
-  const particleCount = 30;
-
-  for (let i = 0; i < particleCount; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    
-    // Random positioning and animation
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.animationDelay = Math.random() * 15 + 's';
-    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
-    particle.style.opacity = Math.random() * 0.5 + 0.2;
-    particle.style.width = (Math.random() * 4 + 2) + 'px';
-    particle.style.height = particle.style.width;
-    
-    particlesContainer.appendChild(particle);
-  }
-}
-
-// Mobile navigation toggle
-function initMobileNav() {
-  const navToggle = document.getElementById('navToggle');
-  const navLinks = document.getElementById('navLinks');
-  
-  if (!navToggle || !navLinks) return;
-  
-  navToggle.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    
-    // Animate hamburger icon
-    const spans = navToggle.querySelectorAll('span');
-    if (navLinks.classList.contains('active')) {
-      spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
-      spans[1].style.opacity = '0';
-      spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
-    } else {
-      spans[0].style.transform = '';
-      spans[1].style.opacity = '';
-      spans[2].style.transform = '';
-    }
-  });
-}
-
-// Smooth scroll for anchor links
-function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      if (href === '#') return;
-      
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-    });
-  });
-}
-
-// Intersection Observer for fade-in animations
-function initScrollAnimations() {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, observerOptions);
-
-  // Observe cards and sections
-  document.querySelectorAll('.card, .feature-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-  });
-}
-
-// Local storage helper functions
-const storage = {
-  get(key, defaultValue = null) {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue;
-    } catch (e) {
-      console.warn('Error reading from localStorage:', e);
-      return defaultValue;
-    }
-  },
-  
-  set(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-      return true;
-    } catch (e) {
-      console.warn('Error writing to localStorage:', e);
-      return false;
-    }
-  },
-  
-  remove(key) {
-    try {
-      localStorage.removeItem(key);
-      return true;
-    } catch (e) {
-      console.warn('Error removing from localStorage:', e);
-      return false;
-    }
-  }
+const STORAGE_KEYS = {
+  XP: 'lucid_xp',
+  LEVEL: 'lucid_level',
+  ACHIEVEMENTS: 'lucid_achievements',
+  STUDY_SESSIONS: 'lucid_study_sessions',
+  SPACED_REPETITION: 'lucid_spaced_repetition',
+  OVERSTIMULATION_LOG: 'lucid_overstimulation',
+  FOCUS_LEVEL: 'lucid_focus_level',
+  ATTENTION_STREAK: 'lucid_attention_streak',
+  BRAIN_FOG_HISTORY: 'lucid_brain_fog'
 };
 
-// Format time helper
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-}
+// XP thresholds
+const XP_PER_LEVEL = 100;
+function getCurrentXP() { return parseInt(localStorage.getItem(STORAGE_KEYS.XP) || '0'); }
+function getCurrentLevel() { return parseInt(localStorage.getItem(STORAGE_KEYS.LEVEL) || '1'); }
 
-// Format duration helper
-function formatDuration(minutes) {
-  if (minutes < 60) {
-    return `${minutes}m`;
+function addXP(amount) {
+  let xp = getCurrentXP() + amount;
+  let level = getCurrentLevel();
+  let leveledUp = false;
+  while (xp >= XP_PER_LEVEL) {
+    xp -= XP_PER_LEVEL;
+    level++;
+    leveledUp = true;
   }
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
+  localStorage.setItem(STORAGE_KEYS.XP, xp);
+  localStorage.setItem(STORAGE_KEYS.LEVEL, level);
+  if (leveledUp) {
+    showNotification(`🎉 Level ${level} unlocked!`, 'success');
+  }
+  updateXPDisplay();
 }
 
-// Debounce function for performance
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
+function updateXPDisplay() {
+  const xpElem = document.getElementById('xpValue');
+  const levelElem = document.getElementById('levelValue');
+  const xpFill = document.getElementById('xpFill');
+  if (xpElem) xpElem.innerText = getCurrentXP();
+  if (levelElem) levelElem.innerText = getCurrentLevel();
+  if (xpFill) {
+    const percent = (getCurrentXP() / XP_PER_LEVEL) * 100;
+    xpFill.style.width = percent + '%';
+  }
 }
 
-// Throttle function for performance
-function throttle(func, limit) {
-  let inThrottle;
-  return function(...args) {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
-    }
-  };
+// Achievements
+const ACHIEVEMENTS_LIST = {
+  first_focus: { name: 'First Focus', desc: 'Complete your first focus session', unlocked: false },
+  streak_7: { name: 'Week Warrior', desc: '7 day streak', unlocked: false },
+  streak_30: { name: 'Zen Master', desc: '30 day streak', unlocked: false },
+  study_10: { name: 'Active Learner', desc: '10 study sessions', unlocked: false },
+  distraction_free: { name: 'Laser Mind', desc: 'Session with 0 distractions', unlocked: false }
+};
+function loadAchievements() {
+  const saved = localStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
+  if (saved) return JSON.parse(saved);
+  return { ...ACHIEVEMENTS_LIST };
+}
+function unlockAchievement(key) {
+  const ach = loadAchievements();
+  if (!ach[key].unlocked) {
+    ach[key].unlocked = true;
+    localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(ach));
+    showNotification(`🏆 Achievement: ${ach[key].name}`, 'success');
+    addXP(20);
+  }
 }
 
-// Check if user prefers reduced motion
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Helper: show a non-intrusive toast
+function showNotification(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerText = message;
+  toast.style.position = 'fixed';
+  toast.style.bottom = '20px';
+  toast.style.right = '20px';
+  toast.style.backgroundColor = type === 'success' ? 'var(--success)' : 'var(--accent-primary)';
+  toast.style.color = 'white';
+  toast.style.padding = '12px 24px';
+  toast.style.borderRadius = 'var(--radius-full)';
+  toast.style.zIndex = '9999';
+  toast.style.fontSize = '0.875rem';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
 }
 
-// Initialize everything when DOM is ready
+// Text-to-speech (Focus assistance)
+function speakText(text) {
+  if (!window.speechSynthesis) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.rate = 0.9;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+// Low-stimulation mode toggle (add to settings)
+function setLowStimulation(enabled) {
+  if (enabled) document.body.classList.add('low-stimulation');
+  else document.body.classList.remove('low-stimulation');
+  localStorage.setItem('lucid_low_stimulation', enabled);
+}
+
+// Load settings on page
 document.addEventListener('DOMContentLoaded', () => {
-  createParticles();
-  initMobileNav();
-  initSmoothScroll();
-  
-  // Only run scroll animations if user doesn't prefer reduced motion
-  if (!prefersReducedMotion()) {
-    initScrollAnimations();
-  }
-  
-  // Log initialization
-  console.log('Lucid initialized');
+  updateXPDisplay();
+  const lowStim = localStorage.getItem('lucid_low_stimulation') === 'true';
+  if (lowStim) document.body.classList.add('low-stimulation');
 });
-
-// Handle visibility change (for timer pausing, etc.)
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    // BACKEND TODO: Handle session pause on tab switch
-    console.log('BACKEND TODO: Page hidden - consider pausing active sessions');
-  } else {
-    console.log('Page visible again');
-  }
-});
-
-// Service Worker registration (for PWA support)
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // BACKEND TODO: Register service worker for offline support
-    // navigator.serviceWorker.register('/sw.js')
-    //   .then(registration => console.log('SW registered'))
-    //   .catch(error => console.log('SW registration failed'));
-  });
-}
-
-/*
-===============================================================
-BACKEND INTEGRATION POINTS
-===============================================================
-
-1. Authentication
-   - Add auth state management
-   - Protected route handling
-   - Token refresh logic
-
-2. API Communication
-   - Create API client with error handling
-   - Request/response interceptors
-   - Retry logic for failed requests
-
-3. Real-time Updates
-   - WebSocket connection for live data
-   - Server-sent events for notifications
-
-4. Data Persistence
-   - Sync local storage with server
-   - Conflict resolution
-   - Offline queue management
-
-===============================================================
-*/
