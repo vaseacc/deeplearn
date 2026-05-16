@@ -1,26 +1,64 @@
+// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+  getAuth,
+  onAuthStateChanged as firebaseOnAuthStateChanged,
+  signInWithEmailAndPassword as firebaseSignIn,
+  createUserWithEmailAndPassword as firebaseSignUp,
+  signOut as firebaseSignOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 let app;
 let auth;
 let db;
+let initPromise;
 
 async function fetchConfig() {
-  const response = await fetch('/api/config');
-  if (!response.ok) {
-    throw new Error('Failed to load Firebase configuration');
-  }
-  return response.json();
+  const res = await fetch('/api/config');
+  if (!res.ok) throw new Error('Failed to load Firebase config');
+  return res.json();
 }
 
-const initPromise = (async () => {
-  const config = await fetchConfig();
-  app = initializeApp(config);
-  auth = getAuth(app);
-  db = getFirestore(app);
-})();
+async function initFirebase() {
+  if (!initPromise) {
+    initPromise = (async () => {
+      const config = await fetchConfig();
+      app = initializeApp(config);
+      auth = getAuth(app);
+      db = getFirestore(app);
+    })();
+  }
+  await initPromise;
+}
 
+// Auth wrapper functions that ensure Firebase is initialized before use
+async function onAuthStateChanged(callback) {
+  await initFirebase();
+  return firebaseOnAuthStateChanged(auth, callback);
+}
+
+async function signInWithEmailAndPassword(email, password) {
+  await initFirebase();
+  return firebaseSignIn(auth, email, password);
+}
+
+async function createUserWithEmailAndPassword(email, password) {
+  await initFirebase();
+  return firebaseSignUp(auth, email, password);
+}
+
+async function signOut() {
+  await initFirebase();
+  return firebaseSignOut(auth);
+}
+
+// Firestore helpers
 function defaultState() {
   return {
     xp: 0,
@@ -36,7 +74,7 @@ function defaultState() {
 }
 
 async function loadUserState(userId) {
-  await initPromise;
+  await initFirebase();
   const docRef = doc(db, "users", userId);
   const snap = await getDoc(docRef);
   if (snap.exists()) {
@@ -46,28 +84,17 @@ async function loadUserState(userId) {
 }
 
 async function saveUserState(userId, state) {
-  await initPromise;
+  await initFirebase();
   const docRef = doc(db, "users", userId);
   await setDoc(docRef, state, { merge: true });
 }
 
-// Export auth and db as async getters so consumers can await them
-function getAuthInstance() {
-  return initPromise.then(() => auth);
-}
-
-function getDbInstance() {
-  return initPromise.then(() => db);
-}
-
 export {
-  getAuthInstance as auth,
-  getDbInstance as db,
-  defaultState,
-  loadUserState,
-  saveUserState,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  defaultState,
+  loadUserState,
+  saveUserState
 };
