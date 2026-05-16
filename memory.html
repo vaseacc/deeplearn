@@ -83,7 +83,7 @@
         .nav-profile {
             display:flex; align-items:center; gap:8px;
             background:var(--surface-light); padding:6px 12px 6px 6px;
-            border-radius:22px; border:1px solid var(--border); cursor:default; white-space:nowrap;
+            border-radius:22px; border:1px solid var(--border); cursor:pointer; white-space:nowrap;
         }
         .nav-profile .avatar {
             width:28px; height:28px; border-radius:50%;
@@ -93,6 +93,23 @@
         }
         .nav-profile .level-tag { font-size:0.78rem; color:var(--text-secondary); letter-spacing:0.2px; }
         .nav-profile .level-tag strong { color:#fff; font-weight:600; }
+        .nav-profile .dropdown-arrow { transition:transform 0.2s ease; }
+        .nav-profile.active .dropdown-arrow { transform:rotate(180deg); }
+
+        .profile-dropdown {
+            position:absolute; top:calc(100% + 8px); right:16px;
+            background:rgba(14,14,32,0.95); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+            border:1px solid var(--border); border-radius:12px;
+            box-shadow:0 8px 32px rgba(0,0,0,0.5); padding:8px; z-index:1000;
+        }
+        .profile-dropdown.hidden { display:none; }
+        .profile-dropdown button {
+            background:transparent; border:none; color:var(--text-secondary);
+            padding:8px 16px; border-radius:8px; cursor:pointer;
+            font-size:0.85rem; font-family:var(--font); transition:var(--transition);
+            width:100%; text-align:left;
+        }
+        .profile-dropdown button:hover { background:rgba(255,255,255,0.08); color:#fff; }
 
         .page-container {
             max-width:700px; margin:30px auto; padding:0 20px 60px;
@@ -176,9 +193,13 @@
             <a href="/forge">Forge</a>
             <a href="/insights">Insights</a>
         </div>
-        <div class="nav-profile">
+        <button class="nav-profile" id="profileTrigger" aria-haspopup="true" aria-expanded="false">
             <div class="avatar">N</div>
             <span class="level-tag">Level <strong id="navLevel">0</strong> Mind</span>
+            <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+        </button>
+        <div class="profile-dropdown hidden" id="profileDropdown">
+            <button id="signOutDropdownBtn">Sign Out</button>
         </div>
     </nav>
 
@@ -403,6 +424,49 @@
             document.addEventListener('keydown', function(e) { if (e.key==='Escape' && exerciseActive) stopExercise(); });
 
             updateNavLevel();
+
+            // Profile dropdown functionality
+            const profileTrigger = document.getElementById('profileTrigger');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const signOutDropdownBtn = document.getElementById('signOutDropdownBtn');
+
+            if (profileTrigger && profileDropdown) {
+                profileTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = profileDropdown.classList.contains('open');
+                    if (isOpen) {
+                        profileDropdown.classList.add('hidden');
+                        profileDropdown.classList.remove('open');
+                        profileTrigger.classList.remove('active');
+                        profileTrigger.setAttribute('aria-expanded', 'false');
+                    } else {
+                        profileDropdown.classList.remove('hidden');
+                        profileDropdown.classList.add('open');
+                        profileTrigger.classList.add('active');
+                        profileTrigger.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!profileTrigger.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
+                        profileDropdown.classList.remove('open');
+                        profileTrigger.classList.remove('active');
+                        profileTrigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            if (signOutDropdownBtn) {
+                signOutDropdownBtn.addEventListener('click', async () => {
+                    try {
+                        await window.signOut();
+                        window.location.href = '/login';
+                    } catch (err) {
+                        console.error('Sign out error:', err);
+                    }
+                });
+            }
         })();
     </script>
 </body>
