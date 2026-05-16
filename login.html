@@ -170,8 +170,7 @@
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       onAuthStateChanged,
-      GoogleAuthProvider,
-      signInWithPopup
+      signInWithGoogle   // ← the new helper
     } from "./firebase.js";
 
     const emailInput = document.getElementById('email');
@@ -183,11 +182,11 @@
       if (user) window.location.href = "/";
     });
 
-    // Google Sign‑In
+    // Google Sign‑In – now just one line
     document.getElementById('googleBtn').addEventListener('click', async () => {
       try {
         errorMsg.textContent = '';
-        await signInWithPopup(GoogleAuthProvider);
+        await signInWithGoogle();   // clean helper
         window.location.href = "/";
       } catch (e) {
         errorMsg.textContent = e.message;
