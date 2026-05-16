@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroFlow — Cognitive Insights</title>
+    <style>
+        :root {
+            --bg: #06060e;
+            --surface: rgba(14, 14, 32, 0.85);
+            --surface-light: rgba(22, 22, 48, 0.75);
+            --blue: #5b8def;
+            --blue-glow: rgba(91, 141, 239, 0.45);
+            --purple: #9b6dff;
+            --purple-glow: rgba(155, 109, 255, 0.4);
+            --cyan: #4dd9c1;
+            --cyan-glow: rgba(77, 217, 193, 0.35);
+            --amber: #f59e0b;
+            --red: #ef4444;
+            --green: #4ade80;
+            --text: #e0e0ec;
+            --text-secondary: #9898b8;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-glow: rgba(255, 255, 255, 0.12);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            background-image:
+                radial-gradient(ellipse at 50% 0%, rgba(91, 141, 239, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 40%, rgba(155, 109, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 70%, rgba(77, 217, 193, 0.03) 0%, transparent 45%);
+        }
+        ::-webkit-scrollbar { width:5px; }
+        ::-webkit-scrollbar-track { background:transparent; }
+        ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.08); border-radius:3px; }
+
+        nav {
+            position: sticky; top:0; z-index:100;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:12px 24px;
+            background: rgba(10,10,22,0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom:1px solid var(--border);
+            flex-wrap:wrap; gap:8px;
+        }
+        .nav-logo {
+            display:flex; align-items:center; gap:10px;
+            font-size:1.3rem; font-weight:700; letter-spacing:-0.3px;
+            color:#fff; white-space:nowrap; text-decoration:none;
+        }
+        .logo-dot {
+            width:26px; height:26px; border-radius:50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            box-shadow: 0 0 18px var(--blue-glow);
+            animation: logoPulse 2.5s ease-in-out infinite;
+        }
+        @keyframes logoPulse {
+            0%,100% { box-shadow:0 0 14px var(--blue-glow); }
+            50% { box-shadow:0 0 28px var(--purple-glow), 0 0 42px var(--blue-glow); }
+        }
+        .nav-links { display:flex; gap:4px; flex-wrap:wrap; }
+        .nav-links a {
+            text-decoration:none; background:transparent; border:1px solid transparent;
+            color:var(--text-secondary); padding:7px 14px; border-radius:18px;
+            cursor:pointer; font-size:0.85rem; font-family:var(--font);
+            transition:var(--transition); white-space:nowrap;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color:#fff; border-color:var(--border-glow);
+            background:rgba(255,255,255,0.04);
+            box-shadow:0 0 14px rgba(91,141,239,0.12);
+        }
+        .nav-profile {
+            display:flex; align-items:center; gap:8px;
+            background:var(--surface-light); padding:6px 12px 6px 6px;
+            border-radius:22px; border:1px solid var(--border); cursor:default; white-space:nowrap;
+        }
+        .nav-profile .avatar {
+            width:28px; height:28px; border-radius:50%;
+            background:linear-gradient(135deg, var(--purple), var(--blue));
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.7rem; font-weight:700; color:#fff;
+        }
+        .nav-profile .level-tag { font-size:0.78rem; color:var(--text-secondary); letter-spacing:0.2px; }
+        .nav-profile .level-tag strong { color:#fff; font-weight:600; }
+
+        .page-container {
+            max-width:700px; margin:30px auto; padding:0 20px 60px;
+        }
+        .insight-card {
+            background: rgba(91, 141, 239, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .insight-card::before {
+            content: '✦ ';
+            color: var(--cyan);
+        }
+        .stat-highlight {
+            color: #fff;
+            font-weight: 600;
+        }
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 10px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="nav-logo"><div class="logo-dot"></div>NeuroFlow</a>
+        <div class="nav-links">
+            <a href="index.html">Dashboard</a>
+            <a href="focus.html">Focus</a>
+            <a href="memory.html">Memory</a>
+            <a href="endurance.html">Endurance</a>
+            <a href="forge.html">Forge</a>
+            <a href="insights.html" class="active">Insights</a>
+        </div>
+        <div class="nav-profile">
+            <div class="avatar">N</div>
+            <span class="level-tag">Level <strong id="navLevel">0</strong> Mind</span>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <h2 style="margin-bottom:16px;">🧬 Cognitive Insights</h2>
+        <div id="insightsContent">
+            <p style="color:var(--text-secondary);">Complete at least 2 training sessions to unlock personalized insights.</p>
+        </div>
+        
+        <div style="margin-top:24px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px;">
+            <h3 style="margin-bottom:10px;">📈 Your Progress</h3>
+            <div id="progressStats"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const STORAGE_KEY = 'neuroflow_v2';
+
+            function defaultState() {
+                return {
+                    xp:0, level:0, totalSessions:0, streak:0, lastSessionDate:null,
+                    metrics:{focus:0, memory:0, stability:0, endurance:0, resistance:0},
+                    evolutionStage:0, sessionHistory:[], forgeItems:[],
+                };
+            }
+
+            let state = loadState();
+
+            function loadState() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (raw) { const saved = JSON.parse(raw); return {...defaultState(), ...saved}; }
+                } catch(e) {}
+                return defaultState();
+            }
+
+            function updateNavLevel() {
+                document.getElementById('navLevel').textContent = state.level;
+            }
+
+            function generateInsights() {
+                const container = document.getElementById('insightsContent');
+                if (!container) return;
+                
+                if (state.sessionHistory.length < 2) {
+                    container.innerHTML = '<p style="color:var(--text-secondary);">Complete at least 2 training sessions to unlock personalized insights.</p>';
+                    return;
+                }
+
+                const history = state.sessionHistory;
+                let insights = [];
+
+                // Focus sessions (focus + endurance)
+                const focusSessions = history.filter(s => s.type === 'focus' || s.type === 'endurance');
+                if (focusSessions.length >= 2) {
+                    const recent = focusSessions.slice(-5);
+                    const avgAcc = recent.reduce((a, s) => a + (s.accuracy || 0), 0) / recent.length;
+                    if (avgAcc >= 75) {
+                        insights.push('Your sustained attention is <span class="stat-highlight">strong</span> — averaging ' + Math.round(avgAcc) + '% accuracy across recent sessions.');
+                    } else if (avgAcc >= 50) {
+                        insights.push('Your attention accuracy averages <span class="stat-highlight">' + Math.round(avgAcc) + '%</span>. Consistent practice can help raise this further.');
+                    } else {
+                        insights.push('Your attention accuracy is developing at <span class="stat-highlight">' + Math.round(avgAcc) + '%</span>. Try shorter sessions to build focus stamina.');
+                    }
+                    
+                    const resistances = recent.map(s => s.resistance || 100);
+                    const avgRes = resistances.reduce((a, r) => a + r, 0) / resistances.length;
+                    if (avgRes >= 70) {
+                        insights.push('Strong <span class="stat-highlight">distraction resistance</span> (' + Math.round(avgRes) + '%) — you effectively filter out interruptions.');
+                    } else if (avgRes < 40 && recent.length > 0) {
+                        insights.push('Distraction resistance can improve — currently averaging <span class="stat-highlight">' + Math.round(avgRes) + '%</span>. Try shorter sessions with fewer distractions.');
+                    }
+                }
+
+                // Memory sessions
+                const memSessions = history.filter(s => s.type === 'memory');
+                if (memSessions.length >= 2) {
+                    const bestLen = Math.max(...memSessions.map(s => s.bestLen || 3));
+                    if (bestLen >= 7) {
+                        insights.push('Impressive <span class="stat-highlight">working memory span</span> — you\'ve reached sequences of ' + bestLen + ' digits.');
+                    } else if (bestLen >= 5) {
+                        insights.push('Your <span class="stat-highlight">working memory span</span> is growing (max ' + bestLen + ' digits). Keep challenging yourself.');
+                    } else {
+                        insights.push('Your working memory span is currently at <span class="stat-highlight">' + bestLen + ' digits</span>. Neural Recall can help expand this.');
+                    }
+                }
+
+                // Endurance
+                const endSessions = history.filter(s => s.type === 'endurance');
+                if (endSessions.length >= 1) {
+                    const durations = endSessions.map(s => s.duration || 0);
+                    const maxDur = Math.max(...durations);
+                    if (maxDur > 180) {
+                        insights.push('You completed a deep focus run of <span class="stat-highlight">' + Math.round(maxDur/60) + ' minutes</span> — demonstrating solid cognitive endurance.');
+                    }
+                    if (endSessions.length >= 2) {
+                        const durGrowth = durations[durations.length-1] - durations[0];
+                        if (durGrowth > 30) {
+                            insights.push('Your endurance duration increased by <span class="stat-highlight">' + Math.round(durGrowth/60) + ' minutes</span> over sessions — clear improvement.');
+                        }
+                    }
+                }
+
+                // Forge
+                const forgeSessions = history.filter(s => s.type === 'forge');
+                if (forgeSessions.length >= 1) {
+                    const totalReviewed = forgeSessions.reduce((a, s) => a + (s.reviewed || 0), 0);
+                    const totalMastered = forgeSessions.reduce((a, s) => a + (s.mastered || 0), 0);
+                    if (totalReviewed > 20) {
+                        insights.push('You\'ve actively recalled <span class="stat-highlight">' + totalReviewed + '</span> items using Memory Forge — strong learning habit.');
+                    }
+                    if (totalMastered > 5) {
+                        insights.push('<span class="stat-highlight">' + totalMastered + '</span> items mastered — your active recall is building lasting knowledge.');
+                    }
+                }
+
+                // Streak & consistency
+                if (state.streak >= 5) {
+                    insights.push('You\'re on a <span class="stat-highlight">' + state.streak + '-day training streak</span>. Consistent practice builds lasting cognitive improvements.');
+                }
+                if (state.totalSessions >= 10) {
+                    insights.push('You\'ve completed <span class="stat-highlight">' + state.totalSessions + '</span> training sessions — your dedication to cognitive training is commendable.');
+                }
+
+                // Diversity of training
+                const types = new Set(history.map(s => s.type));
+                if (types.size >= 4) {
+                    insights.push('You\'re training across <span class="stat-highlight">' + types.size + ' different cognitive domains</span> — a well-rounded approach.');
+                } else if (types.size >= 2) {
+                    insights.push('Try diversifying your training across more exercises to target all cognitive systems.');
+                }
+
+                if (insights.length === 0) {
+                    insights.push('Continue training to reveal more personalized insights about your cognitive patterns.');
+                }
+
+                container.innerHTML = insights.map(i => '<div class="insight-card">' + i + '</div>').join('');
+            }
+
+            function renderProgressStats() {
+                const container = document.getElementById('progressStats');
+                if (!container) return;
+                const m = state.metrics;
+                const stages = ['Inactive','Awakening','Connecting','Coherent','Resilient','Flowing','Harmonic','Transcendent'];
+                container.innerHTML = `
+                    <div class="metric-row"><span>Level</span><span class="stat-highlight">${state.level} (${state.xp} XP)</span></div>
+                    <div class="metric-row"><span>Evolution Stage</span><span class="stat-highlight">${stages[state.evolutionStage]}</span></div>
+                    <div class="metric-row"><span>Total Sessions</span><span class="stat-highlight">${state.totalSessions}</span></div>
+                    <div class="metric-row"><span>Current Streak</span><span class="stat-highlight">${state.streak} days</span></div>
+                    <div class="metric-row"><span>Focus</span><span class="stat-highlight">${Math.round(m.focus)}%</span></div>
+                    <div class="metric-row"><span>Memory</span><span class="stat-highlight">${Math.round(m.memory)}%</span></div>
+                    <div class="metric-row"><span>Stability</span><span class="stat-highlight">${Math.round(m.stability)}%</span></div>
+                    <div class="metric-row"><span>Endurance</span><span class="stat-highlight">${Math.round(m.endurance)}%</span></div>
+                    <div class="metric-row"><span>Distraction Resistance</span><span class="stat-highlight">${Math.round(m.resistance)}%</span></div>
+                `;
+            }
+
+            updateNavLevel();
+            generateInsights();
+            renderProgressStats();
+        })();
+    </script>
+</body>
+</html>
