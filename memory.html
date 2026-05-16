@@ -56,7 +56,7 @@
         .nav-logo {
             display:flex; align-items:center; gap:10px;
             font-size:1.3rem; font-weight:700; letter-spacing:-0.3px;
-            color:#fff; white-space:nowrap; text-decoration:none;
+            color:#fff; white-space:nowrap; text-decoration:none; cursor:pointer;
         }
         .logo-dot {
             width:26px; height:26px; border-radius:50%;
@@ -167,14 +167,14 @@
 </head>
 <body>
     <nav>
-        <a href="index.html" class="nav-logo"><div class="logo-dot"></div>NeuroFlow</a>
+        <a href="/" class="nav-logo"><div class="logo-dot"></div>NeuroFlow</a>
         <div class="nav-links">
-            <a href="index.html">Dashboard</a>
-            <a href="focus.html">Focus</a>
-            <a href="memory.html" class="active">Memory</a>
-            <a href="endurance.html">Endurance</a>
-            <a href="forge.html">Forge</a>
-            <a href="insights.html">Insights</a>
+            <a href="/">Dashboard</a>
+            <a href="/focus">Focus</a>
+            <a href="/memory" class="active">Memory</a>
+            <a href="/endurance">Endurance</a>
+            <a href="/forge">Forge</a>
+            <a href="/insights">Insights</a>
         </div>
         <div class="nav-profile">
             <div class="avatar">N</div>
@@ -187,15 +187,15 @@
         <p style="color:var(--text-secondary); max-width:500px; margin:0 auto 16px;">
             Working memory training. Memorize a sequence, then recall it. Difficulty adapts — longer sequences as you improve.
         </p>
-        <button class="btn" id="startBtn" onclick="startExercise()">Start Memory Session</button>
+        <button class="btn" id="startBtn">Start Memory Session</button>
     </div>
 
     <div class="overlay" id="exerciseOverlay">
-        <button class="close-btn" onclick="stopExercise()">✕</button>
+        <button class="close-btn" id="closeBtn">✕</button>
         <div id="memPhaseLabel" style="color:var(--text-secondary);font-size:0.85rem;">Memorize the sequence</div>
         <div class="mem-sequence-display" id="memSequenceDisplay"></div>
         <div class="mem-input-grid hidden" id="memInputGrid"></div>
-        <button class="btn hidden" id="memSubmitBtn" onclick="submitRecall()">Submit Recall</button>
+        <button class="btn hidden" id="memSubmitBtn">Submit Recall</button>
         <div class="score-live" id="memScoreLive">Round: 0 | Correct: 0 | Best Len: 3</div>
     </div>
 
@@ -395,8 +395,13 @@
                 overlay.addEventListener('click', function(e) { if (e.target === overlay) overlay.remove(); });
             }
 
+            // Event listeners (replaces onclick attributes)
+            document.getElementById('startBtn').addEventListener('click', startExercise);
+            document.getElementById('closeBtn').addEventListener('click', stopExercise);
+            document.getElementById('memSubmitBtn').addEventListener('click', submitRecall);
             document.getElementById('exerciseOverlay').addEventListener('click', function(e) { if (e.target === this) stopExercise(); });
             document.addEventListener('keydown', function(e) { if (e.key==='Escape' && exerciseActive) stopExercise(); });
+
             updateNavLevel();
         })();
     </script>
