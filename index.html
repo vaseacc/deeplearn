@@ -1,1943 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroFlow — Cognitive Training Platform</title>
-    <style>
-        :root {
-            --bg: #06060e;
-            --surface: rgba(14, 14, 32, 0.75);
-            --surface-light: rgba(22, 22, 48, 0.7);
-            --blue: #5b8def;
-            --blue-glow: rgba(91, 141, 239, 0.5);
-            --purple: #9b6dff;
-            --purple-glow: rgba(155, 109, 255, 0.45);
-            --cyan: #4dd9c1;
-            --cyan-glow: rgba(77, 217, 193, 0.4);
-            --green: #4ade80;
-            --red: #ef4444;
-            --amber: #f59e0b;
-            --text: #e0e0ec;
-            --text-secondary: #9898b8;
-            --border: rgba(255, 255, 255, 0.07);
-            --border-glow: rgba(255, 255, 255, 0.12);
-            --radius: 16px;
-            --radius-sm: 10px;
-            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroFlow — Cognitive Training</title>
+  <style>
+    :root {
+      --bg: #06060e;
+      --surface: rgba(14, 14, 32, 0.8);
+      --surface-light: rgba(22, 22, 48, 0.75);
+      --blue: #5b8def;
+      --blue-glow: rgba(91, 141, 239, 0.5);
+      --purple: #9b6dff;
+      --purple-glow: rgba(155, 109, 255, 0.45);
+      --cyan: #4dd9c1;
+      --cyan-glow: rgba(77, 217, 193, 0.4);
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text: #e0e0ec;
+      --text-secondary: #9898b8;
+      --border: rgba(255, 255, 255, 0.07);
+      --border-glow: rgba(255, 255, 255, 0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            background-image:
-                radial-gradient(ellipse at 50% 0%, rgba(91, 141, 239, 0.06) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(155, 109, 255, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 20% 70%, rgba(77, 217, 193, 0.03) 0%, transparent 45%);
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(91, 141, 239, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(155, 109, 255, 0.03) 0%, transparent 50%);
+    }
 
-        /* NAVBAR */
-        nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 28px;
-            background: rgba(10, 10, 22, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #fff;
-        }
-        .nav-logo .logo-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue), var(--purple));
-            box-shadow: 0 0 18px var(--blue-glow);
-            animation: logoPulse 2.5s ease-in-out infinite;
-        }
-        @keyframes logoPulse {
-            0%,
-            100% {
-                box-shadow: 0 0 18px var(--blue-glow);
-            }
-            50% {
-                box-shadow: 0 0 32px var(--purple-glow), 0 0 48px var(--blue-glow);
-            }
-        }
-        .nav-links {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-        .nav-links button {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-secondary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-family: var(--font);
-            transition: var(--transition);
-            letter-spacing: 0.2px;
-        }
-        .nav-links button:hover,
-        .nav-links button.active {
-            color: #fff;
-            border-color: var(--border-glow);
-            background: rgba(255, 255, 255, 0.04);
-            box-shadow: 0 0 12px rgba(91, 141, 239, 0.15);
-        }
-        .nav-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--surface-light);
-            padding: 7px 14px 7px 7px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .nav-profile:hover {
-            border-color: var(--border-glow);
-            box-shadow: 0 0 16px rgba(155, 109, 255, 0.2);
-        }
-        .nav-profile .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .nav-profile .level-tag {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.3px;
-        }
-        .nav-profile .level-tag strong {
-            color: #fff;
-            font-weight: 600;
-        }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: rgba(10, 10, 22, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+    .logo-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 0 18px var(--blue-glow);
+    }
+    .nav-links {
+      display: flex;
+      gap: 6px;
+    }
+    .nav-links button {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: var(--font);
+      transition: 0.2s;
+    }
+    .nav-links button:hover,
+    .nav-links button.active {
+      color: #fff;
+      border-color: var(--border-glow);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .nav-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-light);
+      padding: 7px 14px 7px 7px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+    }
+    .nav-profile .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .nav-profile .level-tag {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .nav-profile .level-tag strong {
+      color: #fff;
+      font-weight: 600;
+    }
 
-        /* MAIN LAYOUT */
-        .main-container {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 24px 20px 60px;
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            grid-template-rows: auto auto auto auto;
-            gap: 20px;
-        }
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto;
-                max-width: 600px;
-            }
-        }
-        .brain-section {
-            grid-column: 1;
-            grid-row: 1 / 3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--surface);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            position: relative;
-            min-height: 440px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        @media (max-width: 1024px) {
-            .brain-section {
-                grid-column: 1;
-                grid-row: auto;
-                min-height: 340px;
-            }
-        }
-        .brain-section canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .brain-label {
-            position: absolute;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            pointer-events: none;
-        }
-        .stats-panel {
-            grid-column: 2;
-            grid-row: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        @media (max-width: 1024px) {
-            .stats-panel {
-                grid-column: 1;
-                grid-row: auto;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-            .stats-panel>* {
-                flex: 1 1 140px;
-                min-width: 130px;
-            }
-        }
-        .stat-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 16px 18px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: var(--transition);
-        }
-        .stat-card:hover {
-            border-color: var(--border-glow);
-            box-shadow: 0 0 20px rgba(91, 141, 239, 0.1);
-        }
-        .stat-card .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .stat-card .stat-name {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-        }
-        .stat-card .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-        .stat-card .stat-bar {
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255, 255, 255, 0.08);
-            margin-top: 6px;
-            overflow: hidden;
-        }
-        .stat-card .stat-bar-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .fill-focus {
-            background: var(--blue);
-            box-shadow: 0 0 8px var(--blue-glow);
-        }
-        .fill-memory {
-            background: var(--purple);
-            box-shadow: 0 0 8px var(--purple-glow);
-        }
-        .fill-stability {
-            background: var(--cyan);
-            box-shadow: 0 0 8px var(--cyan-glow);
-        }
-        .fill-endurance {
-            background: var(--amber);
-            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
-        }
-        .fill-resistance {
-            background: #f472b6;
-            box-shadow: 0 0 8px rgba(244, 114, 182, 0.4);
-        }
-        .xp-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        .xp-display .xp-bar-wrap {
-            flex: 1;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .xp-display .xp-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--blue), var(--purple));
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
 
-        /* TRAINING SECTION */
-        .training-section {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-        @media (max-width: 1024px) {
-            .training-section {
-                grid-column: 1;
-            }
-        }
-        .training-card {
-            flex: 1 1 280px;
-            min-width: 260px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 22px 20px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            transition: var(--transition);
-            cursor: default;
-            position: relative;
-            overflow: hidden;
-        }
-        .training-card:hover {
-            border-color: var(--border-glow);
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 24px rgba(91, 141, 239, 0.08);
-        }
-        .training-card h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            letter-spacing: -0.2px;
-        }
-        .training-card p {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-            margin-bottom: 14px;
-        }
-        .training-card .btn {
-            display: inline-block;
-            padding: 10px 22px;
-            border-radius: 22px;
-            border: 1px solid var(--border-glow);
-            background: rgba(91, 141, 239, 0.12);
-            color: #fff;
-            cursor: pointer;
-            font-family: var(--font);
-            font-size: 0.88rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            transition: var(--transition);
-            text-align: center;
-        }
-        .training-card .btn:hover {
-            background: rgba(91, 141, 239, 0.25);
-            box-shadow: 0 0 22px var(--blue-glow);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-        .training-card .btn.running {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.4);
-            animation: btnWarn 1.5s ease-in-out infinite;
-        }
-        @keyframes btnWarn {
-            0%,
-            100% {
-                box-shadow: 0 0 8px rgba(239, 68, 68, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 20px rgba(239, 68, 68, 0.45);
-            }
-        }
-        .training-card .badge {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            font-size: 0.68rem;
-            padding: 4px 10px;
-            border-radius: 12px;
-            background: rgba(155, 109, 255, 0.2);
-            color: #c4b5fd;
-            letter-spacing: 0.5px;
-        }
+    .brain-area {
+      grid-column: 1;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      min-height: 360px;
+      position: relative;
+    }
+    .brain-svg-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+    }
+    .brain-svg-container svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 20px rgba(91,141,239,0.3));
+    }
+    .brain-glow-ring {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      border: 2px solid rgba(91,141,239,0.2);
+      animation: brainPulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .brain-glow-ring.active {
+      border-color: rgba(91,141,239,0.6);
+      animation: brainPulseActive 1.5s ease-in-out infinite;
+    }
+    @keyframes brainPulse {
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.06); opacity: 0.6; }
+    }
+    @keyframes brainPulseActive {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.12); opacity: 0.9; }
+    }
 
-        /* TRAINING AREA (active overlay) */
-        .training-active-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 200;
-            background: rgba(6, 6, 14, 0.92);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-        }
-        .training-active-overlay.open {
-            display: flex;
-        }
-        .training-active-overlay .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 28px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: var(--transition);
-            z-index: 10;
-        }
-        .training-active-overlay .close-btn:hover {
-            border-color: #fff;
-            box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
-        }
-        .training-active-overlay .task-display {
-            font-size: 6rem;
-            text-align: center;
-            transition: transform 0.1s ease;
-            user-select: none;
-            cursor: pointer;
-            min-width: 180px;
-            min-height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 2px solid rgba(255, 255, 255, 0.06);
-            position: relative;
-        }
-        .training-active-overlay .task-display.target-match {
-            border-color: var(--green);
-            box-shadow: 0 0 40px rgba(74, 222, 128, 0.5);
-            animation: correctPulse 0.4s ease-out;
-        }
-        @keyframes correctPulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.08);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .training-active-overlay .task-display.wrong {
-            border-color: var(--red);
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
-            animation: shake 0.4s ease;
-        }
-        @keyframes shake {
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-            25% {
-                transform: translateX(-8px);
-            }
-            50% {
-                transform: translateX(8px);
-            }
-            75% {
-                transform: translateX(-5px);
-            }
-        }
-        .training-active-overlay .target-indicator {
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-        }
-        .training-active-overlay .target-indicator span {
-            font-size: 2rem;
-            display: inline-block;
-            margin: 0 6px;
-            color: #fff;
-            vertical-align: middle;
-        }
-        .training-active-overlay .score-live {
-            font-size: 1rem;
-            color: var(--cyan);
-            letter-spacing: 0.5px;
-        }
-        .distraction-popup {
-            position: fixed;
-            z-index: 210;
-            padding: 10px 16px;
-            background: rgba(30, 30, 50, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            color: #fff;
-            font-size: 0.8rem;
-            pointer-events: none;
-            animation: distractSlide 2.5s ease-in-out forwards;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-        }
-        @keyframes distractSlide {
-            0% {
-                opacity: 0;
-                transform: translateX(120px) scale(0.9);
-            }
-            20% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
-            75% {
-                opacity: 1;
-                transform: translateX(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateX(-80px) scale(0.85);
-            }
-        }
-        .distraction-particle {
-            position: fixed;
-            z-index: 209;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: particleDrift 3s ease-in-out forwards;
-        }
-        @keyframes particleDrift {
-            0% {
-                opacity: 0;
-                transform: translate(0, 0) scale(0);
-            }
-            30% {
-                opacity: 0.8;
-                transform: translate(40px, -60px) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-30px, -180px) scale(0.3);
-            }
-        }
+    .stats-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      backdrop-filter: blur(8px);
+    }
+    .stat-card .stat-name {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .stat-card .stat-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .stat-bar {
+      height: 4px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+    .fill-focus { background: var(--blue); box-shadow: 0 0 8px var(--blue-glow); }
+    .fill-memory { background: var(--purple); box-shadow: 0 0 8px var(--purple-glow); }
+    .fill-stability { background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow); }
+    .fill-endurance { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.4); }
+    .fill-resistance { background: #f472b6; box-shadow: 0 0 8px rgba(244,114,182,0.4); }
 
-        /* MEMORY TRAINING */
-        .memory-sequence-display {
-            font-size: 3.5rem;
-            font-weight: 700;
-            letter-spacing: 6px;
-            color: #fff;
-            text-align: center;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-        .memory-sequence-display .mem-digit {
-            display: inline-block;
-            animation: memPopIn 0.35s ease-out;
-        }
-        @keyframes memPopIn {
-            0% {
-                transform: scale(0.3);
-                opacity: 0;
-            }
-            60% {
-                transform: scale(1.15);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        .memory-input-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            max-width: 320px;
-        }
-        .memory-input-grid button {
-            padding: 16px;
-            font-size: 1.2rem;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: var(--surface-light);
-            color: #fff;
-            cursor: pointer;
-            font-family: var(--font);
-            transition: var(--transition);
-        }
-        .memory-input-grid button:hover {
-            border-color: #fff;
-            box-shadow: 0 0 16px var(--blue-glow);
-            background: rgba(91, 141, 239, 0.2);
-        }
-        .memory-input-grid button.wrong-press {
-            background: rgba(239, 68, 68, 0.3);
-            border-color: var(--red);
-            animation: shake 0.35s ease;
-        }
+    .xp-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .xp-bar-wrap {
+      flex:1; height:5px; background: rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;
+    }
+    .xp-bar-fill {
+      height:100%; background: linear-gradient(90deg,var(--blue),var(--purple)); border-radius:3px;
+    }
 
-        /* SESSION ANALYSIS */
-        .analysis-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 250;
-            background: rgba(6, 6, 14, 0.94);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            padding: 30px;
-        }
-        .analysis-overlay.open {
-            display: flex;
-        }
-        .analysis-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px 24px;
-            max-width: 550px;
-            width: 100%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        .analysis-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-        }
-        .analysis-metrics {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            text-align: left;
-            margin-bottom: 18px;
-        }
-        .analysis-metrics .metric-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            font-size: 0.85rem;
-        }
-        .analysis-metrics .metric-row .val {
-            font-weight: 600;
-            color: #fff;
-        }
-        .insight-card {
-            background: rgba(91, 141, 239, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-top: 8px;
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-            text-align: left;
-            line-height: 1.5;
-        }
-        .insight-card::before {
-            content: '✦ ';
-            color: var(--cyan);
-        }
-        .analysis-card .btn {
-            margin-top: 16px;
-        }
+    .training-section {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .training-card {
+      flex: 1 1 240px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      backdrop-filter: blur(8px);
+      transition: 0.2s;
+    }
+    .training-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+    }
+    .training-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+    .training-card p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 22px;
+      border: 1px solid var(--border-glow);
+      background: rgba(91,141,239,0.12);
+      color: #fff;
+      cursor: pointer;
+      font-family: var(--font);
+      font-size: 0.88rem;
+      transition: 0.2s;
+    }
+    .btn:hover {
+      background: rgba(91,141,239,0.25);
+      box-shadow: 0 0 22px var(--blue-glow);
+    }
+    .btn.running {
+      background: rgba(239,68,68,0.2);
+      border-color: rgba(239,68,68,0.5);
+    }
 
-        /* PROGRESS SECTION */
-        .progress-section {
-            grid-column: 1 / -1;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 22px 24px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        @media (max-width: 1024px) {
-            .progress-section {
-                grid-column: 1;
-            }
-        }
-        .progress-section h3 {
-            font-size: 1rem;
-            letter-spacing: -0.2px;
-            width: 100%;
-            margin-bottom: 4px;
-        }
-        .evo-stage {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-        .evo-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            transition: var(--transition);
-        }
-        .evo-dot.unlocked {
-            background: var(--blue);
-            box-shadow: 0 0 10px var(--blue-glow);
-        }
-        .streak-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            font-size: 0.85rem;
-            color: var(--amber);
-        }
+    .overlay {
+      display: none;
+      position: fixed;
+      inset:0; z-index:200;
+      background: rgba(6,6,14,0.93);
+      backdrop-filter: blur(6px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap:20px;
+    }
+    .overlay.open { display:flex; }
+    .overlay .close-btn {
+      position:absolute; top:20px; right:28px;
+      background: var(--surface); border:1px solid var(--border); color:#fff;
+      width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2rem;
+    }
+    .task-display {
+      font-size: 6rem;
+      min-width: 180px; min-height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.02);
+      border: 2px solid rgba(255,255,255,0.06);
+      user-select: none;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .task-display.correct { border-color:#4ade80; box-shadow:0 0 40px rgba(74,222,128,0.5); }
+    .task-display.wrong { border-color:#ef4444; box-shadow:0 0 30px rgba(239,68,68,0.5); }
+    .target-indicator span { font-size: 2rem; color:#fff; }
 
-        /* MISC */
-        .hidden {
-            display: none !important;
-        }
-        .text-glow {
-            text-shadow: 0 0 20px var(--blue-glow);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    .memory-sequence-display {
+      font-size: 3rem; font-weight:700; letter-spacing:6px; color:#fff;
+      min-height:80px; display:flex; align-items:center; justify-content:center; gap:12px;
+    }
+    .memory-input-grid {
+      display:grid; grid-template-columns:repeat(5,1fr); gap:10px; max-width:320px;
+    }
+    .memory-input-grid button {
+      padding:16px; font-size:1.2rem; border-radius:14px;
+      border:1px solid var(--border); background:var(--surface-light); color:#fff;
+      cursor:pointer; font-family:var(--font);
+    }
+    .memory-input-grid button:hover { border-color:#fff; box-shadow:0 0 16px var(--blue-glow); }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-        }
+    .analysis-overlay {
+      display:none; position:fixed; inset:0; z-index:250;
+      background: rgba(6,6,14,0.94); backdrop-filter: blur(10px);
+      flex-direction: column; align-items: center; justify-content: center; gap:20px; padding:30px;
+    }
+    .analysis-overlay.open { display:flex; }
+    .analysis-card {
+      background: var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+      padding:28px 24px; max-width:500px; width:100%; text-align:center;
+      backdrop-filter: blur(10px);
+    }
+    .analysis-metrics {
+      display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:left; margin:16px 0;
+    }
+    .metric-row {
+      display:flex; justify-content:space-between; padding:8px 12px;
+      background:rgba(255,255,255,0.02); border-radius:8px; font-size:0.85rem;
+    }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 300;
-            padding: 12px 24px;
-            border-radius: 24px;
-            background: var(--surface);
-            border: 1px solid var(--border-glow);
-            color: #fff;
-            font-size: 0.9rem;
-            letter-spacing: 0.3px;
-            animation: toastIn 0.5s ease-out, toastOut 0.5s 2s ease-in forwards;
-            pointer-events: none;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-        }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        @keyframes toastOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-10px);
-            }
-        }
-    </style>
+    .progress-section {
+      grid-column:1/-1; background: var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius); padding:20px; backdrop-filter: blur(8px);
+    }
+    .evo-dot {
+      width:14px; height:14px; border-radius:50%; background:rgba(255,255,255,0.15);
+      display:inline-block; margin-right:6px;
+    }
+    .evo-dot.unlocked { background:var(--blue); box-shadow:0 0 10px var(--blue-glow); }
+  </style>
 </head>
 <body>
+  <nav>
+    <div class="nav-logo"><div class="logo-dot"></div>NeuroFlow</div>
+    <div class="nav-links">
+      <button class="active" data-nav="dashboard">Dashboard</button>
+      <button data-nav="training">Training</button>
+      <button data-nav="progress">Progress</button>
+    </div>
+    <div class="nav-profile">
+      <div class="avatar">N</div>
+      <span class="level-tag">Level <strong id="navLevel">0</strong> Mind</span>
+    </div>
+  </nav>
 
-    <!-- NAVBAR -->
-    <nav>
-        <div class="nav-logo">
-            <div class="logo-dot"></div>
-            NeuroFlow
+  <div class="main-container">
+    <section class="brain-area">
+      <div class="brain-svg-container">
+        <svg viewBox="0 0 100 100" fill="none">
+          <path d="M50 18c-10 0-18 6-22 12-4-2-9-2-12 1-5 5-3 12 2 15-3 5-2 12 3 16 2 2 5 3 8 2 3 8 11 14 20 14s17-6 20-14c3 1 6 0 8-2 5-4 6-11 3-16 5-3 7-10 2-15-3-3-8-3-12-1-4-6-12-12-20-12z" fill="none" stroke="rgba(160,180,255,0.7)" stroke-width="1.8"/>
+          <path d="M36 60c-2-5-4-12-2-18 1-4 4-8 8-10" stroke="rgba(200,210,255,0.5)" stroke-width="1.2" fill="none"/>
+          <path d="M64 60c2-5 4-12 2-18-1-4-4-8-8-10" stroke="rgba(200,210,255,0.5)" stroke-width="1.2" fill="none"/>
+          <circle cx="42" cy="44" r="5" fill="rgba(91,141,239,0.3)"/>
+          <circle cx="58" cy="44" r="5" fill="rgba(155,109,255,0.3)"/>
+          <path d="M38 70c4-6 20-6 24 0" stroke="rgba(77,217,193,0.5)" stroke-width="1" fill="none"/>
+        </svg>
+        <div class="brain-glow-ring" id="brainGlowRing"></div>
+      </div>
+    </section>
+
+    <aside class="stats-panel">
+      <div class="stat-card">
+        <div class="stat-name">Focus Strength</div>
+        <div class="stat-value" id="statFocus">0%</div>
+        <div class="stat-bar"><div class="stat-bar-fill fill-focus" id="barFocus" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">Working Memory</div>
+        <div class="stat-value" id="statMemory">0%</div>
+        <div class="stat-bar"><div class="stat-bar-fill fill-memory" id="barMemory" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">Stability</div>
+        <div class="stat-value" id="statStability">0%</div>
+        <div class="stat-bar"><div class="stat-bar-fill fill-stability" id="barStability" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">Endurance</div>
+        <div class="stat-value" id="statEndurance">0%</div>
+        <div class="stat-bar"><div class="stat-bar-fill fill-endurance" id="barEndurance" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-name">Distraction Resist</div>
+        <div class="stat-value" id="statResistance">0%</div>
+        <div class="stat-bar"><div class="stat-bar-fill fill-resistance" id="barResistance" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:0.75rem;color:var(--text-secondary);">XP Progress</span>
+          <span style="font-weight:700;color:#fff;" id="xpTotal">0 XP</span>
         </div>
-        <div class="nav-links">
-            <button class="active" data-nav="dashboard">Dashboard</button>
-            <button data-nav="training">Training</button>
-            <button data-nav="progress">Progress</button>
-            <button data-nav="settings">Settings</button>
+        <div class="xp-row" style="margin-top:8px;">
+          <span>Lv.<span id="lvDisplay">0</span></span>
+          <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%"></div></div>
+          <span>Lv.<span id="lvNext">1</span></span>
         </div>
-        <div class="nav-profile" id="navProfile">
-            <div class="avatar">N</div>
-            <span class="level-tag">Level <strong id="navLevel">4</strong> Mind</span>
-        </div>
-    </nav>
+        <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:6px;">Streak: <span id="streakDisplay" style="color:var(--amber);">0 days</span></div>
+      </div>
+    </aside>
 
-    <!-- MAIN CONTAINER -->
-    <div class="main-container" id="mainContainer">
+    <section class="training-section">
+      <div class="training-card">
+        <h3>🔍 Focus Training</h3>
+        <p>Sustained attention task. Identify target symbols under time pressure and distractions.</p>
+        <button class="btn" id="btnFocus" onclick="startFocusTraining()">Start Focus Session</button>
+      </div>
+      <div class="training-card">
+        <h3>🧠 Working Memory</h3>
+        <p>Remember and recall sequences. Length adapts to your performance.</p>
+        <button class="btn" id="btnMemory" onclick="startMemoryTraining()">Start Memory Session</button>
+      </div>
+      <div class="training-card">
+        <h3>⏳ Cognitive Endurance</h3>
+        <p>Extended focus task that tracks performance stability over time.</p>
+        <button class="btn" id="btnEndurance" onclick="startEnduranceTraining()">Start Endurance Run</button>
+      </div>
+    </section>
 
-        <!-- BRAIN VISUALIZATION -->
-        <section class="brain-section" id="brainSection">
-            <canvas id="brainCanvas"></canvas>
-            <div class="brain-label">Live Neural Activity</div>
-        </section>
+    <section class="progress-section" id="progressSection">
+      <h3 style="margin-bottom:12px;">🧬 Evolution</h3>
+      <div id="evoStages" style="margin-bottom:8px;"></div>
+      <div style="display:flex; gap:24px; font-size:0.8rem; color:var(--text-secondary);">
+        <span>Sessions: <strong id="sessionCount" style="color:#fff;">0</strong></span>
+        <span>Total XP: <strong id="totalXPEvo" style="color:#fff;">0</strong></span>
+        <span>Streak: <strong id="streakDaysEvo" style="color:var(--amber);">0</strong> days</span>
+      </div>
+    </section>
+  </div>
 
-        <!-- STATS PANEL -->
-        <aside class="stats-panel" id="statsPanel">
-            <div class="stat-card fade-in">
-                <div class="stat-header"><span class="stat-name">Focus Strength</span><span class="stat-value" id="statFocus">48%</span></div>
-                <div class="stat-bar"><div class="stat-bar-fill fill-focus" id="barFocus" style="width:48%"></div></div>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-header"><span class="stat-name">Working Memory</span><span class="stat-value" id="statMemory">42%</span></div>
-                <div class="stat-bar"><div class="stat-bar-fill fill-memory" id="barMemory" style="width:42%"></div></div>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-header"><span class="stat-name">Cognitive Stability</span><span class="stat-value" id="statStability">55%</span></div>
-                <div class="stat-bar"><div class="stat-bar-fill fill-stability" id="barStability" style="width:55%"></div></div>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-header"><span class="stat-name">Endurance</span><span class="stat-value" id="statEndurance">38%</span></div>
-                <div class="stat-bar"><div class="stat-bar-fill fill-endurance" id="barEndurance" style="width:38%"></div></div>
-            </div>
-            <div class="stat-card fade-in">
-                <div class="stat-header"><span class="stat-name">Distraction Resistance</span><span class="stat-value" id="statResistance">44%</span></div>
-                <div class="stat-bar"><div class="stat-bar-fill fill-resistance" id="barResistance" style="width:44%"></div></div>
-            </div>
-            <div class="stat-card fade-in">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <span style="font-size:0.78rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.4px;">XP Progress</span>
-                    <span style="font-weight:700;color:#fff;font-size:1.1rem;" id="xpTotal">1,240 XP</span>
-                </div>
-                <div class="xp-display" style="margin-top:8px;">
-                    <span style="font-size:0.7rem;">Lv.<span id="lvDisplay">4</span></span>
-                    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:62%"></div></div>
-                    <span style="font-size:0.7rem;">Lv.<span id="lvNext">5</span></span>
-                </div>
-                <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px;">Streak: <span id="streakDisplay" style="color:var(--amber);">3 days</span></div>
-            </div>
-        </aside>
+  <!-- Focus overlay -->
+  <div class="overlay" id="focusOverlay">
+    <button class="close-btn" onclick="stopFocusTraining()">✕</button>
+    <div class="target-indicator">Click when you see: <span id="targetSymbol">▲</span></div>
+    <div class="task-display" id="taskDisplay">●</div>
+    <div style="color:var(--cyan);" id="focusScoreLive">Score: 0 | Hits: 0</div>
+  </div>
 
-        <!-- TRAINING SECTION -->
-        <section class="training-section" id="trainingSection">
-            <div class="training-card" id="cardFocus">
-                <span class="badge">Attention</span>
-                <h3>🔍 Focus Training</h3>
-                <p>Sustained attention task. Identify target symbols in a rapid stream. Trains vigilance and concentration consistency.</p>
-                <button class="btn" id="btnFocus" onclick="startFocusTraining()">Start Focus Session</button>
-            </div>
-            <div class="training-card" id="cardMemory">
-                <span class="badge">Memory</span>
-                <h3>🧠 Working Memory</h3>
-                <p>Sequence recall under increasing load. Hold and manipulate information in active memory. Adaptive difficulty.</p>
-                <button class="btn" id="btnMemory" onclick="startMemoryTraining()">Start Memory Session</button>
-            </div>
-            <div class="training-card" id="cardEndurance">
-                <span class="badge">Endurance</span>
-                <h3>⏳ Cognitive Endurance</h3>
-                <p>Sustained mental effort over extended duration. Track performance stability and fatigue resistance over time.</p>
-                <button class="btn" id="btnEndurance" onclick="startEnduranceTraining()">Start Endurance Run</button>
-            </div>
-        </section>
+  <!-- Memory overlay -->
+  <div class="overlay" id="memoryOverlay">
+    <button class="close-btn" onclick="stopMemoryTraining()">✕</button>
+    <div id="memPhaseLabel" style="color:var(--text-secondary);">Memorize the sequence</div>
+    <div class="memory-sequence-display" id="memSequenceDisplay"></div>
+    <div class="memory-input-grid hidden" id="memInputGrid"></div>
+    <button class="btn hidden" id="memSubmitBtn" onclick="submitMemoryRecall()">Submit</button>
+    <div id="memScoreLive" style="color:var(--cyan);">Round: 0 | Correct: 0</div>
+  </div>
 
-        <!-- PROGRESS SECTION -->
-        <section class="progress-section" id="progressSection">
-            <h3>🧬 Cognitive Evolution</h3>
-            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-                <div class="evo-stage" id="evoStages">
-                    <span style="font-size:0.75rem;color:var(--text-secondary);margin-right:6px;">Pathway:</span>
-                </div>
-                <div class="streak-badge" id="streakBadge">🔥 <span id="streakDays">3</span>-day streak</div>
-                <span style="font-size:0.8rem;color:var(--text-secondary);">Sessions: <strong id="sessionCount" style="color:#fff;">7</strong></span>
-                <span style="font-size:0.8rem;color:var(--text-secondary);">Total XP: <strong id="totalXPEvo" style="color:#fff;">1,240</strong></span>
-            </div>
-            <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;width:100%;">Complete training sessions to strengthen neural pathways and evolve your brain's coherence.</div>
-        </section>
-    </div>
+  <!-- Analysis overlay -->
+  <div class="analysis-overlay" id="analysisOverlay">
+    <div class="analysis-card" id="analysisCard"></div>
+    <button class="btn" onclick="closeAnalysis()">Continue</button>
+  </div>
 
-    <!-- TRAINING OVERLAY (Focus / Endurance) -->
-    <div class="training-active-overlay" id="trainingOverlay">
-        <button class="close-btn" onclick="stopTraining()">✕</button>
-        <div class="target-indicator" id="targetIndicator">Click when you see: <span id="targetSymbol">▲</span></div>
-        <div class="task-display" id="taskDisplay">●</div>
-        <div class="score-live" id="scoreLive">Score: 0 | Hits: 0 | Miss: 0</div>
-    </div>
+  <script>
+    (() => {
+      // ──────────────────────── STATE ────────────────────────
+      const STORAGE_KEY = 'neuroflow_real_v1';
+      let state = loadState();
 
-    <!-- MEMORY TRAINING OVERLAY -->
-    <div class="training-active-overlay" id="memoryOverlay">
-        <button class="close-btn" onclick="stopMemoryTraining()">✕</button>
-        <div class="target-indicator" id="memPhaseLabel">Memorize the sequence</div>
-        <div class="memory-sequence-display" id="memSequenceDisplay"></div>
-        <div class="memory-input-grid hidden" id="memInputGrid"></div>
-        <div class="score-live" id="memScoreLive">Round: 0 | Correct: 0</div>
-        <button class="btn hidden" id="memSubmitBtn" onclick="submitMemoryRecall()">Submit Recall</button>
-    </div>
+      function defaultState() {
+        return {
+          xp: 0,
+          level: 0,
+          totalSessions: 0,
+          streak: 0,
+          lastSessionDate: null,  // 'YYYY-MM-DD'
+          metrics: { focus:0, memory:0, stability:0, endurance:0, resistance:0 },
+          evolutionStage: 0,
+        };
+      }
 
-    <!-- ANALYSIS OVERLAY -->
-    <div class="analysis-overlay" id="analysisOverlay">
-        <div class="analysis-card" id="analysisCard"></div>
-        <button class="btn" onclick="closeAnalysis()" style="background:rgba(91,141,239,0.2);border:1px solid var(--border-glow);color:#fff;padding:10px 28px;border-radius:22px;cursor:pointer;font-family:var(--font);">Continue</button>
-    </div>
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const saved = JSON.parse(raw);
+            // ensure all fields exist
+            const def = defaultState();
+            return { ...def, ...saved };
+          }
+        } catch(e) {}
+        return defaultState();
+      }
 
-    <script>
-        (function() {
-            // ──────────────────────────────────────
-            // GLOBAL STATE
-            // ──────────────────────────────────────
-            const state = {
-                level: 4,
-                xp: 1240,
-                xpToNext: 2000,
-                streak: 3,
-                totalSessions: 7,
-                cognitiveMetrics: {
-                    focus: 48,
-                    memory: 42,
-                    stability: 55,
-                    endurance: 38,
-                    resistance: 44,
-                },
-                baselineMetrics: {
-                    focus: 40,
-                    memory: 35,
-                    stability: 45,
-                    endurance: 32,
-                    resistance: 38,
-                },
-                evolutionStage: 2, // 0-7
-                trainingActive: false,
-                trainingType: null,
-                // Focus training state
-                focusTarget: null,
-                focusSymbols: ['▲', '●', '■', '✦', '◆', '⬟', '⬢', '◈'],
-                focusCurrentSymbol: null,
-                focusScore: 0,
-                focusHits: 0,
-                focusMisses: 0,
-                focusFalseAlarms: 0,
-                focusTotalTargets: 0,
-                focusIntervalId: null,
-                focusSpeed: 1200,
-                focusRound: 0,
-                focusPerformanceWindows: [],
-                // Memory training state
-                memorySequence: [],
-                memoryUserInput: [],
-                memoryRound: 0,
-                memoryCorrect: 0,
-                memorySeqLength: 3,
-                memoryPhase: 'observe',
-                // Endurance
-                enduranceStartTime: null,
-                endurancePerformanceLog: [],
-                // Distraction tracking
-                distractionsShown: 0,
-                distractionsResisted: 0,
-                distractionActive: false,
-            };
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
 
-            // Load saved state
-            function loadState() {
-                try {
-                    const saved = localStorage.getItem('neuroflow_state');
-                    if (saved) {
-                        const s = JSON.parse(saved);
-                        state.level = s.level || 4;
-                        state.xp = s.xp || 1240;
-                        state.streak = s.streak || 3;
-                        state.totalSessions = s.totalSessions || 7;
-                        state.baselineMetrics = s.baselineMetrics || { focus: 40, memory: 35, stability: 45,
-                            endurance: 32, resistance: 38 };
-                        state.evolutionStage = s.evolutionStage || 2;
-                        state.cognitiveMetrics = { ...state.baselineMetrics };
-                        // bump metrics slightly based on baseline
-                        Object.keys(state.cognitiveMetrics).forEach(k => {
-                            state.cognitiveMetrics[k] = Math.min(100, state.baselineMetrics[k] + Math.floor(
-                                Math.random() * 12));
-                        });
-                    }
-                } catch (e) { /* ignore */ }
-                updateXPDisplay();
-                updateAllStatDisplays();
-                updateEvolutionDisplay();
+      // Derived: next level threshold (1000 XP per level)
+      const XP_PER_LEVEL = 1000;
+      function xpForNextLevel() { return (state.level + 1) * XP_PER_LEVEL; }
+      function currentLevelXP() { return state.level * XP_PER_LEVEL; }
+
+      // Streak update based on date
+      function updateStreak() {
+        const today = new Date().toISOString().slice(0,10);
+        if (state.lastSessionDate === today) return; // already counted today
+        if (state.lastSessionDate) {
+          const last = new Date(state.lastSessionDate);
+          const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+          if (state.lastSessionDate === yesterday) {
+            state.streak += 1;
+          } else {
+            state.streak = 1; // reset if gap
+          }
+        } else {
+          state.streak = 1; // first session ever
+        }
+        state.lastSessionDate = today;
+      }
+
+      // ──────────────────────── UI UPDATES ────────────────────────
+      function updateAllDisplays() {
+        document.getElementById('navLevel').textContent = state.level;
+        document.getElementById('lvDisplay').textContent = state.level;
+        document.getElementById('lvNext').textContent = state.level + 1;
+        document.getElementById('xpTotal').textContent = state.xp + ' XP';
+        const progress = state.xp - currentLevelXP();
+        const needed = xpForNextLevel() - currentLevelXP();
+        const pct = Math.min(100, (progress / needed) * 100);
+        document.getElementById('xpBarFill').style.width = pct + '%';
+        document.getElementById('streakDisplay').textContent = state.streak + ' days';
+        document.getElementById('streakDaysEvo').textContent = state.streak;
+        document.getElementById('sessionCount').textContent = state.totalSessions;
+        document.getElementById('totalXPEvo').textContent = state.xp;
+
+        const m = state.metrics;
+        document.getElementById('statFocus').textContent = Math.round(m.focus) + '%';
+        document.getElementById('statMemory').textContent = Math.round(m.memory) + '%';
+        document.getElementById('statStability').textContent = Math.round(m.stability) + '%';
+        document.getElementById('statEndurance').textContent = Math.round(m.endurance) + '%';
+        document.getElementById('statResistance').textContent = Math.round(m.resistance) + '%';
+        document.getElementById('barFocus').style.width = Math.round(m.focus) + '%';
+        document.getElementById('barMemory').style.width = Math.round(m.memory) + '%';
+        document.getElementById('barStability').style.width = Math.round(m.stability) + '%';
+        document.getElementById('barEndurance').style.width = Math.round(m.endurance) + '%';
+        document.getElementById('barResistance').style.width = Math.round(m.resistance) + '%';
+
+        updateEvolutionDisplay();
+        updateBrainGlow();
+      }
+
+      function updateEvolutionDisplay() {
+        const stages = ['Inactive','Awakening','Connecting','Coherent','Resilient','Flowing','Harmonic','Transcendent'];
+        const container = document.getElementById('evoStages');
+        container.innerHTML = '';
+        stages.forEach((name, i) => {
+          const dot = document.createElement('span');
+          dot.className = 'evo-dot' + (i <= state.evolutionStage ? ' unlocked' : '');
+          dot.title = name;
+          container.appendChild(dot);
+        });
+        const label = document.createElement('span');
+        label.style.cssText = 'font-size:0.7rem;color:var(--text-secondary);margin-left:8px;';
+        label.textContent = stages[state.evolutionStage];
+        container.appendChild(label);
+      }
+
+      function updateBrainGlow() {
+        const ring = document.getElementById('brainGlowRing');
+        // active if any recent training (last hour proxy: totalSessions > 0 and metrics > 0)
+        const hasActivity = state.totalSessions > 0 && Object.values(state.metrics).some(v => v > 10);
+        if (hasActivity) ring.classList.add('active');
+        else ring.classList.remove('active');
+      }
+
+      function addXP(amount) {
+        state.xp += amount;
+        const newLevel = Math.floor(state.xp / XP_PER_LEVEL);
+        if (newLevel > state.level) {
+          state.level = newLevel;
+          showToast(`⬆ Level Up! You are now Level ${state.level} Mind`);
+          state.evolutionStage = Math.min(7, state.evolutionStage + 1);
+        }
+        saveState();
+      }
+
+      function applySessionMetrics(focusVal, memoryVal, stabilityVal, enduranceVal, resistanceVal) {
+        const m = state.metrics;
+        // Exponential moving average (alpha=0.4)
+        const alpha = 0.4;
+        m.focus = m.focus * (1-alpha) + focusVal * alpha;
+        m.memory = m.memory * (1-alpha) + memoryVal * alpha;
+        m.stability = m.stability * (1-alpha) + stabilityVal * alpha;
+        m.endurance = m.endurance * (1-alpha) + enduranceVal * alpha;
+        m.resistance = m.resistance * (1-alpha) + resistanceVal * alpha;
+        // Clamp 0-100
+        Object.keys(m).forEach(k => m[k] = Math.min(100, Math.max(0, m[k])));
+        saveState();
+      }
+
+      function showToast(msg) {
+        const t = document.createElement('div');
+        t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:300;padding:12px 24px;border-radius:24px;background:var(--surface);border:1px solid var(--border-glow);color:#fff;font-size:0.9rem;animation:toastAnim 3s ease forwards;';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+      }
+      const style = document.createElement('style');
+      style.textContent = '@keyframes toastAnim{0%{opacity:0;transform:translateX(-50%) translateY(20px)}10%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}';
+      document.head.appendChild(style);
+
+      // ──────────────────────── FOCUS TRAINING ────────────────────────
+      let focusActive = false;
+      let focusTarget, focusSymbols = ['▲','●','■','✦','◆'];
+      let focusHits = 0, focusMisses = 0, focusFalseAlarms = 0, focusRound = 0;
+      let focusSpeed = 1200;
+      let focusTimer = null;
+      let distractionsResisted = 0, distractionsShown = 0;
+
+      function startFocusTraining() {
+        if (focusActive) return;
+        focusActive = true;
+        focusTarget = focusSymbols[Math.floor(Math.random() * focusSymbols.length)];
+        focusHits = 0; focusMisses = 0; focusFalseAlarms = 0; focusRound = 0;
+        focusSpeed = 1200;
+        distractionsResisted = 0; distractionsShown = 0;
+        document.getElementById('targetSymbol').textContent = focusTarget;
+        document.getElementById('focusScoreLive').textContent = 'Score: 0 | Hits: 0';
+        document.getElementById('focusOverlay').classList.add('open');
+        document.getElementById('btnFocus').classList.add('running');
+        nextFocusSymbol();
+      }
+
+      function nextFocusSymbol() {
+        if (!focusActive) return;
+        focusRound++;
+        focusSpeed = Math.max(380, 1200 - focusRound * 22);
+        const isTarget = Math.random() < 0.35;
+        const currentSymbol = isTarget ? focusTarget : focusSymbols.filter(s=>s!==focusTarget)[Math.floor(Math.random()*(focusSymbols.length-1))];
+        document.getElementById('taskDisplay').textContent = currentSymbol;
+        document.getElementById('taskDisplay').className = 'task-display';
+        // distraction chance
+        if (focusRound > 5 && Math.random() < 0.25) triggerDistraction();
+        const expectedTarget = isTarget;
+        const roundSnapshot = focusRound;
+        focusTimer = setTimeout(() => {
+          if (focusActive && focusRound === roundSnapshot && expectedTarget) {
+            focusMisses++;
+            updateFocusScore();
+          }
+          nextFocusSymbol();
+        }, focusSpeed);
+      }
+
+      function handleFocusClick() {
+        if (!focusActive) return;
+        const display = document.getElementById('taskDisplay');
+        const current = display.textContent;
+        if (current === focusTarget) {
+          focusHits++;
+          display.className = 'task-display correct';
+          if (distractionsShown > 0) distractionsResisted++;
+        } else {
+          focusFalseAlarms++;
+          display.className = 'task-display wrong';
+        }
+        updateFocusScore();
+        clearTimeout(focusTimer);
+        setTimeout(() => {
+          display.className = 'task-display';
+          nextFocusSymbol();
+        }, 220);
+      }
+
+      function updateFocusScore() {
+        const score = focusHits * 10 - focusMisses * 5 - focusFalseAlarms * 8;
+        document.getElementById('focusScoreLive').textContent = `Score: ${Math.max(0,score)} | Hits: ${focusHits}`;
+      }
+
+      function triggerDistraction() {
+        distractionsShown++;
+        const popup = document.createElement('div');
+        popup.style.cssText = 'position:fixed;z-index:210;padding:10px 16px;background:rgba(30,30,50,0.9);border:1px solid rgba(255,255,255,0.15);border-radius:20px;color:#fff;font-size:0.8rem;pointer-events:none;animation:distractSlide 2.5s ease forwards;';
+        popup.textContent = ['⚡ Quick check!','📩 New alert','🔔 Notice','💬 Message'][Math.floor(Math.random()*4)];
+        popup.style.top = (15+Math.random()*50)+'%';
+        popup.style.right = (5+Math.random()*20)+'%';
+        document.body.appendChild(popup);
+        setTimeout(() => popup.remove(), 2600);
+      }
+      // distract animation
+      const distStyle = document.createElement('style');
+      distStyle.textContent = '@keyframes distractSlide{0%{opacity:0;transform:translateX(120px)}20%{opacity:1;transform:translateX(0)}80%{opacity:1}100%{opacity:0;transform:translateX(-80px)}}';
+      document.head.appendChild(distStyle);
+
+      function stopFocusTraining() {
+        focusActive = false;
+        clearTimeout(focusTimer);
+        document.getElementById('focusOverlay').classList.remove('open');
+        document.getElementById('btnFocus').classList.remove('running');
+        // calculate metrics
+        const totalTargets = focusHits + focusMisses;
+        const accuracy = totalTargets ? focusHits / totalTargets * 100 : 0;
+        const falseRate = focusRound ? focusFalseAlarms / focusRound * 100 : 0;
+        const resistance = distractionsShown ? distractionsResisted / distractionsShown * 100 : 100;
+        const sessionFocus = Math.min(100, accuracy * 0.8 + resistance * 0.2);
+        const sessionStability = Math.min(100, 100 - falseRate);
+        applySessionMetrics(sessionFocus, 0, sessionStability, 0, resistance);
+        const xpGain = focusHits * 15 + distractionsResisted * 20;
+        addXP(xpGain);
+        updateStreak();
+        state.totalSessions++;
+        saveState();
+        updateAllDisplays();
+        showSessionAnalysis('focus', {accuracy, falseRate, resistance, hits: focusHits, misses: focusMisses, xp: xpGain});
+      }
+
+      document.getElementById('taskDisplay').addEventListener('click', handleFocusClick);
+      document.getElementById('focusOverlay').addEventListener('click', (e) => { if(e.target === e.currentTarget) handleFocusClick(); });
+      document.addEventListener('keydown', (e) => { if(e.key===' ' && focusActive) { e.preventDefault(); handleFocusClick(); } });
+
+      // ──────────────────────── MEMORY TRAINING ────────────────────────
+      let memoryActive = false;
+      let memSeq = [], memUserSeq = [], memSeqLen = 3, memRound = 0, memCorrect = 0;
+
+      function startMemoryTraining() {
+        if (memoryActive) return;
+        memoryActive = true;
+        memSeqLen = 3; memRound = 0; memCorrect = 0;
+        document.getElementById('memoryOverlay').classList.add('open');
+        document.getElementById('btnMemory').classList.add('running');
+        document.getElementById('memScoreLive').textContent = 'Round: 0 | Correct: 0';
+        nextMemoryRound();
+      }
+
+      function nextMemoryRound() {
+        memUserSeq = [];
+        memSeq = Array.from({length: memSeqLen}, () => Math.floor(Math.random()*10));
+        const display = document.getElementById('memSequenceDisplay');
+        display.innerHTML = '';
+        document.getElementById('memInputGrid').classList.add('hidden');
+        document.getElementById('memSubmitBtn').classList.add('hidden');
+        document.getElementById('memPhaseLabel').textContent = '🔍 Memorize the sequence';
+        let delay = 0;
+        memSeq.forEach((d, i) => {
+          setTimeout(() => {
+            if (!memoryActive) return;
+            const span = document.createElement('span');
+            span.textContent = d; span.style.fontSize='3rem';
+            display.appendChild(span);
+            if (i === memSeq.length-1) {
+              setTimeout(() => {
+                if (!memoryActive) return;
+                display.innerHTML = '<span style="color:var(--text-secondary);">— Recall —</span>';
+                document.getElementById('memPhaseLabel').textContent = '🧠 Recall the sequence';
+                buildMemInputGrid();
+                document.getElementById('memInputGrid').classList.remove('hidden');
+                document.getElementById('memSubmitBtn').classList.remove('hidden');
+              }, 1000);
             }
+          }, delay);
+          delay += 700;
+        });
+      }
 
-            function saveState() {
-                try {
-                    localStorage.setItem('neuroflow_state', JSON.stringify({
-                        level: state.level,
-                        xp: state.xp,
-                        streak: state.streak,
-                        totalSessions: state.totalSessions,
-                        baselineMetrics: state.baselineMetrics,
-                        evolutionStage: state.evolutionStage,
-                    }));
-                } catch (e) { /* ignore */ }
-            }
+      function buildMemInputGrid() {
+        const grid = document.getElementById('memInputGrid');
+        grid.innerHTML = '';
+        for (let i=0; i<=9; i++) {
+          const btn = document.createElement('button');
+          btn.textContent = i;
+          btn.onclick = () => { memUserSeq.push(i); updateMemInputDisplay(); if(memUserSeq.length===memSeq.length) submitMemoryRecall(); };
+          grid.appendChild(btn);
+        }
+        const clear = document.createElement('button');
+        clear.textContent = '⌫'; clear.style.gridColumn='span 2';
+        clear.onclick = () => { memUserSeq.pop(); updateMemInputDisplay(); };
+        grid.appendChild(clear);
+      }
 
-            // ──────────────────────────────────────
-            // BRAIN VISUALIZATION
-            // ──────────────────────────────────────
-            const brainCanvas = document.getElementById('brainCanvas');
-            const brainCtx = brainCanvas.getContext('2d');
-            let brainNodes = [];
-            let brainConnections = [];
-            let brainParticles = [];
-            let brainAnimId;
+      function updateMemInputDisplay() {
+        const display = document.getElementById('memSequenceDisplay');
+        display.innerHTML = memUserSeq.map(d => `<span style="color:#4dd9c1;">${d}</span>`).join(' ') + ' _'.repeat(Math.max(0, memSeq.length - memUserSeq.length));
+      }
 
-            function initBrainNodes() {
-                const w = brainCanvas.width || 600;
-                const h = brainCanvas.height || 440;
-                const cx = w / 2;
-                const cy = h / 2;
-                brainNodes = [];
-                // Generate brain-shaped node positions
-                const numNodes = 28;
-                for (let i = 0; i < numNodes; i++) {
-                    const angle = (i / numNodes) * Math.PI * 2 - Math.PI / 2;
-                    const distFactor = 0.55 + Math.random() * 0.4;
-                    // Brain shape: wider at top, narrower at bottom, slight midline
-                    let rx = Math.cos(angle) * (w * 0.38) * distFactor;
-                    let ry = Math.sin(angle) * (h * 0.4) * distFactor;
-                    // Pinch at bottom (brainstem area)
-                    if (ry > cy * 0.35) {
-                        rx *= 0.55;
-                    }
-                    // Add hemispheric offset
-                    if (rx < 0) rx -= w * 0.03;
-                    if (rx > 0) rx += w * 0.03;
-                    // Slight midline gap
-                    if (Math.abs(rx) < w * 0.04) rx *= 1.6;
-                    const x = cx + rx;
-                    const y = cy + ry;
-                    // Functional region tagging
-                    let region = 'general';
-                    if (y < cy - h * 0.18) region = 'frontal'; // focus
-                    if (y > cy + h * 0.1 && Math.abs(rx) > w * 0.08) region = 'temporal'; // memory
-                    if (Math.abs(rx) < w * 0.06 && Math.abs(ry) < h * 0.2) region = 'core'; // stability
-                    brainNodes.push({
-                        x,
-                        y,
-                        baseX: x,
-                        baseY: y,
-                        region,
-                        radius: 3 + Math.random() * 4,
-                        glow: 0.3 + Math.random() * 0.5,
-                        phase: Math.random() * Math.PI * 2,
-                        pulseSpeed: 0.015 + Math.random() * 0.03,
-                    });
-                }
-                // Build connections
-                brainConnections = [];
-                for (let i = 0; i < brainNodes.length; i++) {
-                    for (let j = i + 1; j < brainNodes.length; j++) {
-                        const dx = brainNodes[i].x - brainNodes[j].x;
-                        const dy = brainNodes[i].y - brainNodes[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        const maxDist = w * 0.35;
-                        if (dist < maxDist) {
-                            brainConnections.push({
-                                from: i,
-                                to: j,
-                                strength: 1 - dist / maxDist,
-                                baseStrength: 1 - dist / maxDist,
-                            });
-                        }
-                    }
-                }
-                // Initialize particles
-                brainParticles = [];
-                for (let i = 0; i < 35; i++) {
-                    spawnBrainParticle();
-                }
-            }
+      function submitMemoryRecall() {
+        if (!memoryActive) return;
+        const correct = memUserSeq.join(',') === memSeq.join(',');
+        memRound++;
+        if (correct) {
+          memCorrect++;
+          memSeqLen = Math.min(9, memSeqLen+1);
+        } else {
+          memSeqLen = Math.max(2, memSeqLen-1);
+        }
+        document.getElementById('memScoreLive').textContent = `Round: ${memRound} | Correct: ${memCorrect}`;
+        document.getElementById('memSequenceDisplay').innerHTML = correct ? '<span style="color:#4ade80;">✓ Correct!</span>' : `<span style="color:#ef4444;">✗ Was: ${memSeq.join(' ')}</span>`;
+        document.getElementById('memInputGrid').classList.add('hidden');
+        document.getElementById('memSubmitBtn').classList.add('hidden');
+        setTimeout(() => { if(memoryActive) nextMemoryRound(); }, 1400);
+      }
 
-            function spawnBrainParticle() {
-                if (brainConnections.length === 0) return;
-                const conn = brainConnections[Math.floor(Math.random() * brainConnections.length)];
-                brainParticles.push({
-                    connIndex: brainConnections.indexOf(conn),
-                    t: Math.random(),
-                    speed: 0.003 + Math.random() * 0.012,
-                    size: 1.2 + Math.random() * 2.5,
-                });
-            }
+      function stopMemoryTraining() {
+        memoryActive = false;
+        document.getElementById('memoryOverlay').classList.remove('open');
+        document.getElementById('btnMemory').classList.remove('running');
+        const accuracy = memRound ? memCorrect/memRound*100 : 0;
+        applySessionMetrics(0, accuracy, accuracy*0.6, 0, 0);
+        const xpGain = memCorrect * 30;
+        addXP(xpGain);
+        updateStreak();
+        state.totalSessions++;
+        saveState();
+        updateAllDisplays();
+        showSessionAnalysis('memory', {accuracy, rounds: memRound, correct: memCorrect, xp: xpGain});
+      }
 
-            function resizeBrainCanvas() {
-                const section = document.getElementById('brainSection');
-                const rect = section.getBoundingClientRect();
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                const w = rect.width;
-                const h = Math.max(rect.height, 380);
-                brainCanvas.width = w * dpr;
-                brainCanvas.height = h * dpr;
-                brainCanvas.style.width = w + 'px';
-                brainCanvas.style.height = h + 'px';
-                brainCtx.setTransform(1, 0, 0, 1, 0, 0);
-                brainCtx.scale(dpr, dpr);
-                return { w, h };
-            }
+      // ──────────────────────── ENDURANCE (focus-based) ────────────────────────
+      function startEnduranceTraining() {
+        // just start focus, but flag endurance
+        startFocusTraining();
+        window._enduranceMode = true;
+        document.getElementById('btnEndurance').classList.add('running');
+      }
 
-            function getCognitiveInfluence() {
-                const m = state.cognitiveMetrics;
-                const b = state.baselineMetrics;
-                // Blend session metrics with baseline
-                const blend = 0.55; // session weight
-                return {
-                    focus: m.focus * blend + b.focus * (1 - blend),
-                    memory: m.memory * blend + b.memory * (1 - blend),
-                    stability: m.stability * blend + b.stability * (1 - blend),
-                    endurance: m.endurance * blend + b.endurance * (1 - blend),
-                    resistance: m.resistance * blend + b.resistance * (1 - blend),
-                };
-            }
+      // modify stopFocusTraining to handle endurance
+      const origStopFocus = stopFocusTraining;
+      stopFocusTraining = function() {
+        const wasEndurance = window._enduranceMode;
+        window._enduranceMode = false;
+        origStopFocus();
+        document.getElementById('btnEndurance').classList.remove('running');
+        if (wasEndurance) {
+          // endurance-specific metric: session length influences endurance
+          const sessionDuration = focusRound * focusSpeed / 1000; // approximate seconds
+          const enduranceVal = Math.min(100, sessionDuration / 60 * 50); // 1 min = 50%
+          applySessionMetrics(0,0,0, enduranceVal, 0);
+          state.totalSessions++; // already counted in origStopFocus? stopFocusTraining already increments totalSessions. avoid double.
+          // we'll let origStopFocus handle totalSessions and XP, but add endurance metric
+          saveState();
+          updateAllDisplays();
+        }
+      };
 
-            function renderBrain(timestamp) {
-                const { w, h } = resizeBrainCanvas();
-                if (brainNodes.length === 0) initBrainNodes();
-                const ctx = brainCtx;
-                const influence = getCognitiveInfluence();
-                const focusFactor = influence.focus / 100;
-                const memoryFactor = influence.memory / 100;
-                const stabilityFactor = influence.stability / 100;
-                const enduranceFactor = influence.endurance / 100;
-                const resistanceFactor = influence.resistance / 100;
-                const overallHealth = (focusFactor + memoryFactor + stabilityFactor + enduranceFactor + resistanceFactor) /
-                    5;
+      // ──────────────────────── ANALYSIS ────────────────────────
+      function showSessionAnalysis(type, data) {
+        const overlay = document.getElementById('analysisOverlay');
+        const card = document.getElementById('analysisCard');
+        let html = '<h2>📊 Session Analysis</h2><div class="analysis-metrics">';
+        if (type === 'focus') {
+          html += `<div class="metric-row"><span>Accuracy</span><span>${Math.round(data.accuracy)}%</span></div>
+                   <div class="metric-row"><span>False Alarms</span><span>${Math.round(data.falseRate)}%</span></div>
+                   <div class="metric-row"><span>Distraction Resist</span><span>${Math.round(data.resistance)}%</span></div>
+                   <div class="metric-row"><span>Hits</span><span>${data.hits}</span></div>`;
+        } else if (type === 'memory') {
+          html += `<div class="metric-row"><span>Accuracy</span><span>${Math.round(data.accuracy)}%</span></div>
+                   <div class="metric-row"><span>Rounds</span><span>${data.rounds}</span></div>
+                   <div class="metric-row"><span>Correct</span><span>${data.correct}</span></div>`;
+        }
+        html += `</div><p style="margin:12px 0;color:var(--cyan);">+${data.xp} XP earned</p>`;
+        card.innerHTML = html;
+        overlay.classList.add('open');
+      }
 
-                ctx.clearRect(0, 0, w, h);
+      function closeAnalysis() {
+        document.getElementById('analysisOverlay').classList.remove('open');
+      }
+      document.getElementById('analysisOverlay').addEventListener('click', (e) => { if(e.target === e.currentTarget) closeAnalysis(); });
 
-                // Subtle background glow
-                const bgGlow = ctx.createRadialGradient(w / 2, h / 2, w * 0.1, w / 2, h / 2, w * 0.7);
-                bgGlow.addColorStop(0, `rgba(91,141,239,${0.04 * overallHealth})`);
-                bgGlow.addColorStop(0.5, `rgba(155,109,255,${0.02 * overallHealth})`);
-                bgGlow.addColorStop(1, 'rgba(6,6,14,0)');
-                ctx.fillStyle = bgGlow;
-                ctx.fillRect(0, 0, w, h);
+      // ──────────────────────── INIT ────────────────────────
+      window.onload = () => {
+        updateAllDisplays();
+        document.getElementById('btnFocus').classList.remove('running');
+        document.getElementById('btnMemory').classList.remove('running');
+        document.getElementById('btnEndurance').classList.remove('running');
+      };
 
-                // Update node positions with subtle jitter (stability affects jitter)
-                const jitterAmount = (1 - stabilityFactor) * 3.5;
-                brainNodes.forEach(node => {
-                    node.x = node.baseX + (Math.sin(timestamp * 0.002 + node.phase) * jitterAmount);
-                    node.y = node.baseY + (Math.cos(timestamp * 0.0025 + node.phase) * jitterAmount);
-                    node.glow = 0.25 + overallHealth * 0.7 + Math.sin(timestamp * node.pulseSpeed + node.phase) *
-                        0.15;
-                });
-
-                // Draw connections
-                brainConnections.forEach(conn => {
-                    const from = brainNodes[conn.from];
-                    const to = brainNodes[conn.to];
-                    const effectiveStrength = conn.baseStrength * overallHealth;
-                    if (effectiveStrength < 0.08) return;
-                    const alpha = effectiveStrength * 0.7;
-                    ctx.beginPath();
-                    ctx.moveTo(from.x, from.y);
-                    ctx.lineTo(to.x, to.y);
-                    ctx.strokeStyle = `rgba(140,170,255,${alpha})`;
-                    ctx.lineWidth = effectiveStrength * 2.2;
-                    ctx.shadowBlur = effectiveStrength * 14;
-                    ctx.shadowColor = `rgba(120,155,255,${alpha})`;
-                    ctx.stroke();
-                    ctx.shadowBlur = 0;
-                });
-
-                // Draw nodes
-                brainNodes.forEach(node => {
-                    const r = node.radius * (0.8 + node.glow * 0.7);
-                    let color;
-                    switch (node.region) {
-                        case 'frontal':
-                            color = `rgba(91,141,239,${0.6 + node.glow * 0.4})`;
-                            break;
-                        case 'temporal':
-                            color = `rgba(155,109,255,${0.6 + node.glow * 0.4})`;
-                            break;
-                        case 'core':
-                            color = `rgba(77,217,193,${0.6 + node.glow * 0.4})`;
-                            break;
-                        default:
-                            color = `rgba(180,190,220,${0.55 + node.glow * 0.4})`;
-                    }
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
-                    ctx.fillStyle = color;
-                    ctx.shadowBlur = r * 4;
-                    ctx.shadowColor = color;
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                    // Inner bright spot
-                    ctx.beginPath();
-                    ctx.arc(node.x, node.y, r * 0.4, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${0.5 + node.glow * 0.4})`;
-                    ctx.fill();
-                });
-
-                // Draw particles
-                brainParticles.forEach((p, i) => {
-                    if (p.connIndex >= brainConnections.length) {
-                        brainParticles.splice(i, 1);
-                        spawnBrainParticle();
-                        return;
-                    }
-                    const conn = brainConnections[p.connIndex];
-                    const from = brainNodes[conn.from];
-                    const to = brainNodes[conn.to];
-                    p.t += p.speed * (0.6 + overallHealth * 0.8);
-                    if (p.t > 1) {
-                        p.t = 0;
-                        p.connIndex = Math.floor(Math.random() * brainConnections.length);
-                    }
-                    const x = from.x + (to.x - from.x) * p.t;
-                    const y = from.y + (to.y - from.y) * p.t;
-                    ctx.beginPath();
-                    ctx.arc(x, y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(200,220,255,${0.5 + overallHealth * 0.5})`;
-                    ctx.shadowBlur = p.size * 5;
-                    ctx.shadowColor = 'rgba(180,200,255,0.8)';
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                });
-
-                // Ensure particle count
-                while (brainParticles.length < 30 + Math.floor(overallHealth * 15)) {
-                    spawnBrainParticle();
-                }
-                while (brainParticles.length > 50) {
-                    brainParticles.pop();
-                }
-
-                brainAnimId = requestAnimationFrame(renderBrain);
-            }
-
-            // ──────────────────────────────────────
-            // UI UPDATES
-            // ──────────────────────────────────────
-            function updateAllStatDisplays() {
-                const m = state.cognitiveMetrics;
-                document.getElementById('statFocus').textContent = Math.round(m.focus) + '%';
-                document.getElementById('statMemory').textContent = Math.round(m.memory) + '%';
-                document.getElementById('statStability').textContent = Math.round(m.stability) + '%';
-                document.getElementById('statEndurance').textContent = Math.round(m.endurance) + '%';
-                document.getElementById('statResistance').textContent = Math.round(m.resistance) + '%';
-                document.getElementById('barFocus').style.width = Math.round(m.focus) + '%';
-                document.getElementById('barMemory').style.width = Math.round(m.memory) + '%';
-                document.getElementById('barStability').style.width = Math.round(m.stability) + '%';
-                document.getElementById('barEndurance').style.width = Math.round(m.endurance) + '%';
-                document.getElementById('barResistance').style.width = Math.round(m.resistance) + '%';
-            }
-
-            function updateXPDisplay() {
-                document.getElementById('xpTotal').textContent = state.xp.toLocaleString() + ' XP';
-                document.getElementById('navLevel').textContent = state.level;
-                document.getElementById('lvDisplay').textContent = state.level;
-                document.getElementById('lvNext').textContent = state.level + 1;
-                const progress = Math.min(100, (state.xp % 2000) / 2000 * 100);
-                document.getElementById('xpBarFill').style.width = progress + '%';
-                document.getElementById('streakDisplay').textContent = state.streak + ' days';
-                document.getElementById('streakDays').textContent = state.streak;
-                document.getElementById('sessionCount').textContent = state.totalSessions;
-                document.getElementById('totalXPEvo').textContent = state.xp.toLocaleString();
-            }
-
-            function updateEvolutionDisplay() {
-                const container = document.getElementById('evoStages');
-                // Clear existing dots
-                const existingDots = container.querySelectorAll('.evo-dot');
-                existingDots.forEach(d => d.remove());
-                const stages = ['Fragmented', 'Awakening', 'Connecting', 'Coherent', 'Resilient', 'Flowing', 'Harmonic',
-                    'Transcendent'
-                ];
-                for (let i = 0; i < stages.length; i++) {
-                    const dot = document.createElement('span');
-                    dot.className = 'evo-dot' + (i <= state.evolutionStage ? ' unlocked' : '');
-                    dot.title = stages[i];
-                    dot.style.width = (10 + i * 1.5) + 'px';
-                    dot.style.height = (10 + i * 1.5) + 'px';
-                    container.appendChild(dot);
-                }
-                const label = document.createElement('span');
-                label.style.cssText =
-                    'font-size:0.7rem;color:var(--text-secondary);margin-left:8px;letter-spacing:0.3px;';
-                label.textContent = stages[Math.min(state.evolutionStage, stages.length - 1)];
-                // Remove old label
-                const oldLabel = container.querySelector('span:last-child');
-                if (oldLabel && oldLabel.style.fontSize === '0.7rem') oldLabel.remove();
-                container.appendChild(label);
-            }
-
-            function awardXP(amount) {
-                state.xp += amount;
-                const newLevel = Math.floor(state.xp / 2000) + 1;
-                if (newLevel > state.level) {
-                    state.level = newLevel;
-                    showToast('⬆ Level Up! You reached Level ' + state.level + ' Mind');
-                    state.evolutionStage = Math.min(7, state.evolutionStage + 1);
-                    updateEvolutionDisplay();
-                }
-                updateXPDisplay();
-                saveState();
-            }
-
-            function updateBaselineMetrics() {
-                const m = state.cognitiveMetrics;
-                const b = state.baselineMetrics;
-                // Slowly move baseline toward session performance
-                const lerp = 0.15;
-                b.focus = b.focus + (m.focus - b.focus) * lerp;
-                b.memory = b.memory + (m.memory - b.memory) * lerp;
-                b.stability = b.stability + (m.stability - b.stability) * lerp;
-                b.endurance = b.endurance + (m.endurance - b.endurance) * lerp;
-                b.resistance = b.resistance + (m.resistance - b.resistance) * lerp;
-                state.baselineMetrics = b;
-                saveState();
-            }
-
-            function boostMetric(metric, amount) {
-                state.cognitiveMetrics[metric] = Math.min(100, state.cognitiveMetrics[metric] + amount);
-                updateAllStatDisplays();
-            }
-
-            function dipMetric(metric, amount) {
-                state.cognitiveMetrics[metric] = Math.max(5, state.cognitiveMetrics[metric] - amount);
-                updateAllStatDisplays();
-            }
-
-            function showToast(msg) {
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.textContent = msg;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2600);
-            }
-
-            // ──────────────────────────────────────
-            // FOCUS TRAINING
-            // ──────────────────────────────────────
-            function startFocusTraining() {
-                if (state.trainingActive) return;
-                state.trainingActive = true;
-                state.trainingType = 'focus';
-                state.focusTarget = state.focusSymbols[Math.floor(Math.random() * state.focusSymbols.length)];
-                state.focusScore = 0;
-                state.focusHits = 0;
-                state.focusMisses = 0;
-                state.focusFalseAlarms = 0;
-                state.focusTotalTargets = 0;
-                state.focusSpeed = 1100;
-                state.focusRound = 0;
-                state.focusPerformanceWindows = [];
-                state.distractionsShown = 0;
-                state.distractionsResisted = 0;
-                state.distractionActive = false;
-                document.getElementById('targetSymbol').textContent = state.focusTarget;
-                document.getElementById('scoreLive').textContent = 'Score: 0 | Hits: 0 | Miss: 0';
-                document.getElementById('taskDisplay').textContent = '●';
-                document.getElementById('taskDisplay').className = 'task-display';
-                document.getElementById('trainingOverlay').classList.add('open');
-                document.getElementById('btnFocus').textContent = 'Session Active...';
-                document.getElementById('btnFocus').classList.add('running');
-                scheduleNextFocusSymbol();
-            }
-
-            function scheduleNextFocusSymbol() {
-                if (!state.trainingActive || state.trainingType !== 'focus') return;
-                state.focusRound++;
-                // Increasing speed
-                state.focusSpeed = Math.max(350, 1100 - state.focusRound * 18);
-                // Choose symbol
-                const isTarget = Math.random() < 0.35;
-                if (isTarget) {
-                    state.focusCurrentSymbol = state.focusTarget;
-                    state.focusTotalTargets++;
-                } else {
-                    const others = state.focusSymbols.filter(s => s !== state.focusTarget);
-                    state.focusCurrentSymbol = others[Math.floor(Math.random() * others.length)];
-                }
-                document.getElementById('taskDisplay').textContent = state.focusCurrentSymbol;
-                document.getElementById('taskDisplay').className = 'task-display';
-                document.getElementById('scoreLive').textContent =
-                    `Score: ${state.focusScore} | Hits: ${state.focusHits} | Miss: ${state.focusMisses}`;
-                // Occasionally trigger distraction
-                if (state.focusRound > 5 && Math.random() < 0.25 && !state.distractionActive) {
-                    triggerDistraction();
-                }
-                // Auto-miss if target not clicked
-                const currentTarget = state.focusCurrentSymbol === state.focusTarget;
-                const currentRound = state.focusRound;
-                state.focusIntervalId = setTimeout(() => {
-                    if (state.trainingActive && state.trainingType === 'focus' && state.focusRound ===
-                        currentRound && currentTarget) {
-                        // Missed target
-                        state.focusMisses++;
-                        state.focusScore = Math.max(0, state.focusScore - 8);
-                        dipMetric('focus', 1.5);
-                        dipMetric('stability', 0.8);
-                        logPerformanceWindow(false);
-                        document.getElementById('scoreLive').textContent =
-                            `Score: ${state.focusScore} | Hits: ${state.focusHits} | Miss: ${state.focusMisses}`;
-                    }
-                    scheduleNextFocusSymbol();
-                }, state.focusSpeed);
-            }
-
-            function handleFocusClick() {
-                if (!state.trainingActive || state.trainingType !== 'focus') return;
-                const display = document.getElementById('taskDisplay');
-                if (state.focusCurrentSymbol === state.focusTarget) {
-                    // Correct hit
-                    state.focusHits++;
-                    state.focusScore += 15;
-                    boostMetric('focus', 2.5);
-                    boostMetric('stability', 1.2);
-                    boostMetric('endurance', 0.8);
-                    if (state.distractionActive) {
-                        state.distractionsResisted++;
-                        boostMetric('resistance', 3);
-                        state.distractionActive = false;
-                    }
-                    display.className = 'task-display target-match';
-                    awardXP(25);
-                    logPerformanceWindow(true);
-                } else {
-                    // False alarm
-                    state.focusFalseAlarms++;
-                    state.focusScore = Math.max(0, state.focusScore - 12);
-                    dipMetric('focus', 2);
-                    dipMetric('stability', 1.5);
-                    display.className = 'task-display wrong';
-                }
-                document.getElementById('scoreLive').textContent =
-                    `Score: ${state.focusScore} | Hits: ${state.focusHits} | Miss: ${state.focusMisses}`;
-                // Clear and advance
-                clearTimeout(state.focusIntervalId);
-                setTimeout(() => {
-                    display.className = 'task-display';
-                    scheduleNextFocusSymbol();
-                }, 250);
-            }
-
-            function logPerformanceWindow(success) {
-                state.focusPerformanceWindows.push({
-                    time: Date.now(),
-                    success,
-                    round: state.focusRound,
-                });
-                // Keep last 60 windows
-                if (state.focusPerformanceWindows.length > 60) state.focusPerformanceWindows.shift();
-            }
-
-            function triggerDistraction() {
-                state.distractionActive = true;
-                state.distractionsShown++;
-                const type = Math.random();
-                if (type < 0.5) {
-                    // Popup distraction
-                    const popup = document.createElement('div');
-                    popup.className = 'distraction-popup';
-                    popup.textContent = ['⚡ Quick check!', '📩 New alert', '🔔 Notice', '💬 Message'][Math.floor(Math
-                        .random() * 4)];
-                    popup.style.top = (15 + Math.random() * 50) + '%';
-                    popup.style.right = (5 + Math.random() * 20) + '%';
-                    document.body.appendChild(popup);
-                    setTimeout(() => popup.remove(), 2600);
-                } else {
-                    // Particle distraction
-                    for (let i = 0; i < 4; i++) {
-                        const particle = document.createElement('div');
-                        particle.className = 'distraction-particle';
-                        particle.style.background = ['#ff6b9d', '#ffca5f', '#5be0ff', '#c084fc'][Math.floor(Math
-                        .random() * 4)];
-                        particle.style.left = (30 + Math.random() * 50) + '%';
-                        particle.style.top = (40 + Math.random() * 35) + '%';
-                        particle.style.animationDuration = (2 + Math.random() * 3) + 's';
-                        document.body.appendChild(particle);
-                        setTimeout(() => particle.remove(), 3200);
-                    }
-                }
-                // Distraction lasts ~2 seconds
-                setTimeout(() => { state.distractionActive = false; }, 2200);
-            }
-
-            function stopTraining() {
-                state.trainingActive = false;
-                state.trainingType = null;
-                clearTimeout(state.focusIntervalId);
-                document.getElementById('trainingOverlay').classList.remove('open');
-                document.getElementById('btnFocus').textContent = 'Start Focus Session';
-                document.getElementById('btnFocus').classList.remove('running');
-                document.getElementById('btnEndurance').textContent = 'Start Endurance Run';
-                document.getElementById('btnEndurance').classList.remove('running');
-                updateBaselineMetrics();
-                // Show analysis if we had a session
-                if (state.focusRound > 3 || state.endurancePerformanceLog.length > 3) {
-                    showSessionAnalysis('focus');
-                }
-            }
-
-            // ──────────────────────────────────────
-            // MEMORY TRAINING
-            // ──────────────────────────────────────
-            function startMemoryTraining() {
-                if (state.trainingActive) return;
-                state.trainingActive = true;
-                state.trainingType = 'memory';
-                state.memoryRound = 0;
-                state.memoryCorrect = 0;
-                state.memorySeqLength = 3;
-                state.memoryPhase = 'observe';
-                state.memoryUserInput = [];
-                document.getElementById('memoryOverlay').classList.add('open');
-                document.getElementById('memInputGrid').classList.add('hidden');
-                document.getElementById('memSubmitBtn').classList.add('hidden');
-                document.getElementById('memScoreLive').textContent = 'Round: 0 | Correct: 0';
-                document.getElementById('btnMemory').textContent = 'Session Active...';
-                document.getElementById('btnMemory').classList.add('running');
-                generateMemorySequence();
-            }
-
-            function generateMemorySequence() {
-                state.memorySequence = [];
-                for (let i = 0; i < state.memorySeqLength; i++) {
-                    state.memorySequence.push(Math.floor(Math.random() * 10));
-                }
-                state.memoryUserInput = [];
-                state.memoryPhase = 'observe';
-                document.getElementById('memPhaseLabel').textContent = '🔍 Memorize the sequence';
-                document.getElementById('memInputGrid').classList.add('hidden');
-                document.getElementById('memSubmitBtn').classList.add('hidden');
-                // Display sequence one by one
-                const display = document.getElementById('memSequenceDisplay');
-                display.innerHTML = '';
-                let delay = 0;
-                state.memorySequence.forEach((digit, idx) => {
-                    setTimeout(() => {
-                        if (!state.trainingActive || state.trainingType !== 'memory') return;
-                        const span = document.createElement('span');
-                        span.className = 'mem-digit';
-                        span.textContent = digit;
-                        display.appendChild(span);
-                        if (idx === state.memorySequence.length - 1) {
-                            // After last digit, prepare input
-                            setTimeout(() => {
-                                if (!state.trainingActive || state.trainingType !== 'memory')
-                                    return;
-                                display.innerHTML =
-                                    '<span style="font-size:1.2rem;color:var(--text-secondary);">— Recall —</span>';
-                                state.memoryPhase = 'recall';
-                                document.getElementById('memPhaseLabel').textContent =
-                                    '🧠 Recall the sequence';
-                                buildMemoryInputGrid();
-                                document.getElementById('memInputGrid').classList.remove(
-                                    'hidden');
-                                document.getElementById('memSubmitBtn').classList.remove(
-                                    'hidden');
-                            }, 900);
-                        }
-                    }, delay);
-                    delay += 650;
-                });
-            }
-
-            function buildMemoryInputGrid() {
-                const grid = document.getElementById('memInputGrid');
-                grid.innerHTML = '';
-                for (let i = 0; i <= 9; i++) {
-                    const btn = document.createElement('button');
-                    btn.textContent = i;
-                    btn.onclick = () => memoryDigitPress(i, btn);
-                    grid.appendChild(btn);
-                }
-                // Also add clear button
-                const clearBtn = document.createElement('button');
-                clearBtn.textContent = '⌫';
-                clearBtn.style.gridColumn = 'span 2';
-                clearBtn.onclick = () => {
-                    state.memoryUserInput.pop();
-                    updateMemoryInputDisplay();
-                };
-                grid.appendChild(clearBtn);
-            }
-
-            function memoryDigitPress(digit, btn) {
-                if (state.memoryPhase !== 'recall') return;
-                state.memoryUserInput.push(digit);
-                updateMemoryInputDisplay();
-                // Visual feedback
-                btn.style.boxShadow = '0 0 20px var(--blue-glow)';
-                setTimeout(() => { btn.style.boxShadow = ''; }, 200);
-                // Auto-submit if length matches
-                if (state.memoryUserInput.length === state.memorySequence.length) {
-                    setTimeout(() => submitMemoryRecall(), 350);
-                }
-            }
-
-            function updateMemoryInputDisplay() {
-                const display = document.getElementById('memSequenceDisplay');
-                display.innerHTML = state.memoryUserInput
-                    .map(d => `<span class="mem-digit" style="color:#4dd9c1;">${d}</span>`)
-                    .join(' ') + ' _'.repeat(Math.max(0, state.memorySequence.length - state.memoryUserInput.length));
-            }
-
-            function submitMemoryRecall() {
-                if (state.memoryPhase !== 'recall') return;
-                const correct = state.memoryUserInput.join(',') === state.memorySequence.join(',');
-                state.memoryRound++;
-                if (correct) {
-                    state.memoryCorrect++;
-                    state.memorySeqLength = Math.min(9, state.memorySeqLength + 1);
-                    boostMetric('memory', 4);
-                    boostMetric('stability', 1.5);
-                    boostMetric('endurance', 1);
-                    awardXP(40);
-                    document.getElementById('memSequenceDisplay').innerHTML =
-                        '<span style="color:#4ade80;font-size:1.5rem;">✓ Correct!</span>';
-                    document.getElementById('memScoreLive').textContent =
-                        `Round: ${state.memoryRound} | Correct: ${state.memoryCorrect}`;
-                } else {
-                    state.memorySeqLength = Math.max(2, state.memorySeqLength - 1);
-                    dipMetric('memory', 2);
-                    dipMetric('stability', 1);
-                    document.getElementById('memSequenceDisplay').innerHTML =
-                        `<span style="color:#ef4444;">✗ Was: ${state.memorySequence.join(' ')}</span>`;
-                    document.getElementById('memScoreLive').textContent =
-                        `Round: ${state.memoryRound} | Correct: ${state.memoryCorrect}`;
-                    // Flash input grid
-                    document.getElementById('memInputGrid').querySelectorAll('button').forEach(b => {
-                        b.classList.add('wrong-press');
-                        setTimeout(() => b.classList.remove('wrong-press'), 400);
-                    });
-                }
-                document.getElementById('memInputGrid').classList.add('hidden');
-                document.getElementById('memSubmitBtn').classList.add('hidden');
-                state.memoryPhase = 'transition';
-                setTimeout(() => {
-                    if (state.trainingActive && state.trainingType === 'memory') {
-                        generateMemorySequence();
-                    }
-                }, 1400);
-            }
-
-            function stopMemoryTraining() {
-                state.trainingActive = false;
-                state.trainingType = null;
-                document.getElementById('memoryOverlay').classList.remove('open');
-                document.getElementById('btnMemory').textContent = 'Start Memory Session';
-                document.getElementById('btnMemory').classList.remove('running');
-                updateBaselineMetrics();
-                if (state.memoryRound > 1) {
-                    showSessionAnalysis('memory');
-                }
-            }
-
-            // ──────────────────────────────────────
-            // ENDURANCE TRAINING
-            // ──────────────────────────────────────
-            function startEnduranceTraining() {
-                if (state.trainingActive) return;
-                // Endurance uses the focus training mechanics but tracks over longer period
-                state.enduranceStartTime = Date.now();
-                state.endurancePerformanceLog = [];
-                startFocusTraining();
-                state.trainingType = 'endurance';
-                document.getElementById('btnEndurance').textContent = 'Endurance Active...';
-                document.getElementById('btnEndurance').classList.add('running');
-                // Log performance every 15 seconds
-                state._enduranceLogger = setInterval(() => {
-                    if (!state.trainingActive || state.trainingType !== 'endurance') {
-                        clearInterval(state._enduranceLogger);
-                        return;
-                    }
-                    const elapsed = Math.floor((Date.now() - state.enduranceStartTime) / 1000);
-                    const recentWindows = state.focusPerformanceWindows.filter(w => (Date.now() - w.time) <
-                        15000);
-                    const accuracy = recentWindows.length > 0 ?
-                        recentWindows.filter(w => w.success).length / recentWindows.length : 0;
-                    state.endurancePerformanceLog.push({ elapsed, accuracy, round: state.focusRound });
-                    // Gradually increase cognitive load
-                    state.focusSpeed = Math.max(300, state.focusSpeed - 15);
-                    // Slight metric boost for sustained effort
-                    boostMetric('endurance', 1.5);
-                }, 15000);
-            }
-
-            // Override stopTraining for endurance
-            const originalStopTraining = stopTraining;
-            stopTraining = function() {
-                clearInterval(state._enduranceLogger);
-                const wasEndurance = state.trainingType === 'endurance';
-                originalStopTraining();
-                if (wasEndurance && state.endurancePerformanceLog.length > 0) {
-                    showSessionAnalysis('endurance');
-                }
-                document.getElementById('btnEndurance').textContent = 'Start Endurance Run';
-                document.getElementById('btnEndurance').classList.remove('running');
-            };
-
-            // ──────────────────────────────────────
-            // SESSION ANALYSIS
-            // ──────────────────────────────────────
-            function showSessionAnalysis(type) {
-                const overlay = document.getElementById('analysisOverlay');
-                const card = document.getElementById('analysisCard');
-                let html = '<h2>📊 Session Analysis</h2>';
-                let insights = [];
-
-                if (type === 'focus' || type === 'endurance') {
-                    const totalTargets = state.focusTotalTargets || 1;
-                    const accuracy = Math.round((state.focusHits / Math.max(1, state.focusHits + state.focusMisses +
-                        state.focusFalseAlarms)) * 100);
-                    const missRate = Math.round((state.focusMisses / Math.max(1, totalTargets)) * 100);
-                    const falseRate = Math.round((state.focusFalseAlarms / Math.max(1, state.focusRound)) * 100);
-                    const resistanceScore = state.distractionsShown > 0 ?
-                        Math.round((state.distractionsResisted / state.distractionsShown) * 100) : 100;
-
-                    html += `
-                <div class="analysis-metrics">
-                  <div class="metric-row"><span>Attention Accuracy</span><span class="val">${accuracy}%</span></div>
-                  <div class="metric-row"><span>Target Detection</span><span class="val">${state.focusHits} hits</span></div>
-                  <div class="metric-row"><span>Miss Rate</span><span class="val">${missRate}%</span></div>
-                  <div class="metric-row"><span>False Alarms</span><span class="val">${state.focusFalseAlarms}</span></div>
-                  <div class="metric-row"><span>Distraction Resistance</span><span class="val">${resistanceScore}%</span></div>
-                  <div class="metric-row"><span>Final Score</span><span class="val">${state.focusScore}</span></div>
-                </div>`;
-
-                    if (accuracy >= 75) {
-                        insights.push(
-                            `You maintained stable attention for ${accuracy}% of the session — strong sustained focus detected.`
-                            );
-                    } else if (accuracy >= 50) {
-                        insights.push(
-                            `Attention was moderate at ${accuracy}%. Room for improvement in consistency.`);
-                    } else {
-                        insights.push(
-                            `Attention wavered significantly (${accuracy}%). Try shorter sessions to build focus stamina.`
-                            );
-                    }
-                    if (resistanceScore >= 70) {
-                        insights.push(
-                            `Distraction resistance was solid at ${resistanceScore}% — you successfully filtered out most interruptions.`
-                            );
-                    } else if (state.distractionsShown > 0) {
-                        insights.push(
-                            `Distractions affected your performance. Resistance training can help strengthen this skill.`
-                            );
-                    }
-                    if (state.focusFalseAlarms > state.focusHits * 0.4) {
-                        insights.push(
-                            'High false alarm rate suggests impulsive responding. Practice pausing before reacting.');
-                    }
-                }
-
-                if (type === 'memory') {
-                    const memAcc = state.memoryRound > 0 ? Math.round((state.memoryCorrect / state.memoryRound) *
-                        100) : 0;
-                    html += `
-                <div class="analysis-metrics">
-                  <div class="metric-row"><span>Memory Accuracy</span><span class="val">${memAcc}%</span></div>
-                  <div class="metric-row"><span>Rounds Completed</span><span class="val">${state.memoryRound}</span></div>
-                  <div class="metric-row"><span>Correct Recalls</span><span class="val">${state.memoryCorrect}</span></div>
-                  <div class="metric-row"><span>Peak Sequence Length</span><span class="val">${state.memorySeqLength} digits</span></div>
-                </div>`;
-                    if (memAcc >= 80) {
-                        insights.push('Excellent working memory performance. Your ability to hold and recall sequences is strong.');
-                    } else if (memAcc >= 50) {
-                        insights.push('Decent memory recall. With practice, sequence length capacity can expand.');
-                    } else {
-                        insights.push('Memory training shows opportunity for growth. Start with shorter sequences.');
-                    }
-                    if (state.memorySeqLength >= 6) {
-                        insights.push('You reached advanced sequence lengths (6+ digits) — impressive working memory span.');
-                    }
-                }
-
-                if (type === 'endurance') {
-                    const log = state.endurancePerformanceLog;
-                    if (log.length >= 2) {
-                        const firstHalf = log.slice(0, Math.floor(log.length / 2));
-                        const secondHalf = log.slice(Math.floor(log.length / 2));
-                        const firstAcc = firstHalf.reduce((a, l) => a + l.accuracy, 0) / Math.max(1, firstHalf
-                        .length);
-                        const secondAcc = secondHalf.reduce((a, l) => a + l.accuracy, 0) / Math.max(1, secondHalf
-                            .length);
-                        const drop = Math.round((firstAcc - secondAcc) * 100);
-                        if (drop > 15) {
-                            insights.push(
-                                `Performance declined by ~${drop}% in the latter half — indicating cognitive fatigue. Build endurance gradually.`
-                                );
-                        } else if (drop > 5) {
-                            insights.push(
-                                `Slight performance dip of ~${drop}% over time. Your endurance is developing.`);
-                        } else if (drop <= 5 && log.length >= 3) {
-                            insights.push(
-                                'Remarkable stability! You maintained consistent performance throughout the session.');
-                        }
-                        html += `
-                  <div class="analysis-metrics">
-                    <div class="metric-row"><span>Session Duration</span><span class="val">${log[log.length-1].elapsed}s</span></div>
-                    <div class="metric-row"><span>Stability Drop</span><span class="val">${Math.max(0,drop)}%</span></div>
-                    <div class="metric-row"><span>Data Points</span><span class="val">${log.length}</span></div>
-                  </div>`;
-                    }
-                }
-
-                // General insight
-                insights.push('Each training session strengthens neural pathways associated with sustained cognitive control.');
-
-                html += insights.map(i => `<div class="insight-card">${i}</div>`).join('');
-                html +=
-                    `<p style="font-size:0.75rem;color:var(--text-secondary);margin-top:12px;">XP Earned: +${type==='memory'?state.memoryCorrect*40:state.focusHits*25} XP</p>`;
-                card.innerHTML = html;
-                overlay.classList.add('open');
-                state.totalSessions++;
-                updateXPDisplay();
-                updateEvolutionDisplay();
-                saveState();
-            }
-
-            function closeAnalysis() {
-                document.getElementById('analysisOverlay').classList.remove('open');
-            }
-
-            // ──────────────────────────────────────
-            // EVENT LISTENERS
-            // ──────────────────────────────────────
-            document.getElementById('taskDisplay').addEventListener('click', handleFocusClick);
-            document.getElementById('trainingOverlay').addEventListener('click', function(e) {
-                if (e.target === this) handleFocusClick();
-            });
-            document.getElementById('memoryOverlay').addEventListener('click', function(e) {
-                if (e.target === this) stopMemoryTraining();
-            });
-            document.getElementById('analysisOverlay').addEventListener('click', function(e) {
-                if (e.target === this) closeAnalysis();
-            });
-
-            // Keyboard support for focus training
-            document.addEventListener('keydown', function(e) {
-                if (e.key === ' ' || e.key === 'Enter') {
-                    if (state.trainingActive && state.trainingType === 'focus') {
-                        e.preventDefault();
-                        handleFocusClick();
-                    }
-                }
-                if (e.key === 'Escape') {
-                    if (state.trainingActive) {
-                        if (state.trainingType === 'memory') stopMemoryTraining();
-                        else stopTraining();
-                    }
-                    if (document.getElementById('analysisOverlay').classList.contains('open')) {
-                        closeAnalysis();
-                    }
-                }
-            });
-
-            // Nav buttons
-            document.querySelectorAll('.nav-links button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.nav-links button').forEach(b => b.classList
-                        .remove('active'));
-                    this.classList.add('active');
-                    const target = this.dataset.nav;
-                    if (target === 'training') {
-                        document.getElementById('trainingSection').scrollIntoView({ behavior: 'smooth' });
-                    } else if (target === 'progress') {
-                        document.getElementById('progressSection').scrollIntoView({ behavior: 'smooth' });
-                    } else if (target === 'dashboard') {
-                        document.getElementById('brainSection').scrollIntoView({ behavior: 'smooth' });
-                    }
-                });
-            });
-
-            // ──────────────────────────────────────
-            // INITIALIZATION
-            // ──────────────────────────────────────
-            function init() {
-                loadState();
-                resizeBrainCanvas();
-                initBrainNodes();
-                brainAnimId = requestAnimationFrame(renderBrain);
-                updateAllStatDisplays();
-                updateXPDisplay();
-                updateEvolutionDisplay();
-            }
-
-            // Handle resize
-            let resizeDebounce;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeDebounce);
-                resizeDebounce = setTimeout(() => {
-                    resizeBrainCanvas();
-                    initBrainNodes();
-                }, 300);
-            });
-
-            init();
-            console.log('🧬 NeuroFlow — Cognitive Training Platform initialized.');
-            console.log('   Train focus, memory, distraction resistance & endurance.');
-            console.log('   All systems active. Brain visualization live.');
-            console.log('   Click "Start Focus Session" to begin training.');
-        })();
-    </script>
+      // reset state if needed (for development) – not exposed in UI to avoid accidental use.
+      // To reset: open console and run localStorage.removeItem('neuroflow_real_v1'); location.reload();
+    })();
+  </script>
 </body>
-                  </html>
+</html>
