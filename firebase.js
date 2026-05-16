@@ -1,21 +1,25 @@
-// firebase.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Firebase config from environment variables (Vercel injects them at build time)
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID
-};
+let app;
+let auth;
+let db;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+async function fetchConfig() {
+  const response = await fetch('/api/config');
+  if (!response.ok) {
+    throw new Error('Failed to load Firebase configuration');
+  }
+  return response.json();
+}
+
+const initPromise = (async () => {
+  const config = await fetchConfig();
+  app = initializeApp(config);
+  auth = getAuth(app);
+  db = getFirestore(app);
+})();
 
 function defaultState() {
   return {
@@ -32,6 +36,7 @@ function defaultState() {
 }
 
 async function loadUserState(userId) {
+  await initPromise;
   const docRef = doc(db, "users", userId);
   const snap = await getDoc(docRef);
   if (snap.exists()) {
@@ -41,8 +46,28 @@ async function loadUserState(userId) {
 }
 
 async function saveUserState(userId, state) {
+  await initPromise;
   const docRef = doc(db, "users", userId);
   await setDoc(docRef, state, { merge: true });
 }
 
-export { auth, db, defaultState, loadUserState, saveUserState, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged };
+// Export auth and db as async getters so consumers can await them
+function getAuthInstance() {
+  return initPromise.then(() => auth);
+}
+
+function getDbInstance() {
+  return initPromise.then(() => db);
+}
+
+export {
+  getAuthInstance as auth,
+  getDbInstance as db,
+  defaultState,
+  loadUserState,
+  saveUserState,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+};
