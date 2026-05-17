@@ -413,6 +413,193 @@
             border-radius:var(--radius); padding:28px 24px;
             max-width:480px; width:100%; text-align:center;
         }
+
+        /* Domain Header with XP Bar */
+        .domain-header {
+            margin-bottom: 24px;
+        }
+        .xp-bar-container {
+            margin-top: 12px;
+            text-align: left;
+        }
+        .xp-bar-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .xp-bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 12px var(--blue-glow);
+        }
+
+        /* Level Selector */
+        .level-selector {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .level-btn {
+            padding: 10px 18px;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .level-btn:hover:not(.locked) {
+            border-color: var(--blue);
+            background: rgba(91, 141, 239, 0.12);
+            box-shadow: 0 0 16px var(--blue-glow);
+        }
+        .level-btn.active {
+            background: rgba(91, 141, 239, 0.18);
+            border-color: var(--blue);
+            box-shadow: 0 0 20px var(--blue-glow);
+        }
+        .level-btn.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .level-btn.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Exercise Description */
+        .exercise-description {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .exercise-description h3 {
+            color: var(--cyan);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .exercise-description p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Canvas Overlay for Level 2 */
+        .canvas-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(6, 6, 14, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .canvas-overlay.hidden {
+            display: none;
+        }
+        .canvas-overlay .close-btn {
+            position: absolute;
+            top: 18px;
+            right: 24px;
+        }
+        .vigilance-header {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .vigilance-title {
+            font-size: 1.2rem;
+            color: var(--cyan);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .vigilance-stats {
+            display: flex;
+            gap: 24px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .vigilance-stats strong {
+            color: var(--cyan);
+        }
+        #vigilanceCanvas {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 0 40px rgba(77, 217, 193, 0.15);
+        }
+        .vigilance-instruction {
+            position: absolute;
+            bottom: 40px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 0 16px 40px;
+                margin: 20px auto;
+            }
+            .level-selector {
+                gap: 8px;
+            }
+            .level-btn {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
+            .exercise-description {
+                padding: 16px;
+            }
+            .vigilance-stats {
+                gap: 16px;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .level-selector {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .level-btn {
+                text-align: center;
+            }
+            .vigilance-title {
+                font-size: 1rem;
+            }
+            .vigilance-instruction {
+                font-size: 0.85rem;
+                bottom: 30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -443,18 +630,51 @@
     </nav>
 
     <div class="page-container">
-        <h2 style="margin-bottom:6px;">🎯 Focus Stream</h2>
-        <p style="color:var(--text-secondary); max-width:500px; margin:0 auto 16px;">
-            Sustained attention training. A symbol stream appears — click only when the target symbol shows.
-        </p>
+        <div class="domain-header">
+            <h2 style="margin-bottom:6px;">🎯 Sustained Attention</h2>
+            <div class="xp-bar-container">
+                <div class="xp-bar-label">Focus XP: <strong id="focusXP">0</strong></div>
+                <div class="xp-bar-track">
+                    <div class="xp-bar-fill" id="focusXPBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="level-selector">
+            <button class="level-btn active" data-level="1">Level 1: Focus Anchor</button>
+            <button class="level-btn locked" data-level="2" id="unlockFocusL2" title="Requires 300 Focus XP">
+                Level 2: Vigilance Orbit 🔒
+            </button>
+        </div>
+        
+        <div class="exercise-description" id="exerciseDesc">
+            <h3>Focus Anchor</h3>
+            <p>Sustained attention training. A symbol stream appears — click only when the target symbol shows. Build your focus stability over time.</p>
+        </div>
+        
         <button class="btn" id="startBtn">Start Focus Session</button>
     </div>
 
+    <!-- Level 1 Overlay -->
     <div class="overlay" id="exerciseOverlay">
         <button class="close-btn" id="closeBtn">✕</button>
         <div class="target-indicator">Click when you see: <span id="targetSymbol">▲</span></div>
         <div class="task-display" id="taskDisplay">●</div>
         <div class="score-live" id="liveScore">Score: 0 | Hits: 0 | Stability: 100%</div>
+    </div>
+
+    <!-- Level 2: Vigilance Orbit Canvas Container -->
+    <div class="canvas-overlay hidden" id="vigilanceOverlay">
+        <button class="close-btn" id="closeVigilanceBtn">✕</button>
+        <div class="vigilance-header">
+            <div class="vigilance-title">Vigilance Orbit</div>
+            <div class="vigilance-stats">
+                <span>Streak: <strong id="vigilanceStreak">0</strong></span>
+                <span>Score: <strong id="vigilanceScore">0</strong></span>
+            </div>
+        </div>
+        <canvas id="vigilanceCanvas"></canvas>
+        <div class="vigilance-instruction" id="vigilanceInstruction">Press SPACE when the core node flashes</div>
     </div>
 
     <script type="module">
