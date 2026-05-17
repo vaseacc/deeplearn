@@ -737,6 +737,8 @@
 
             async function addXP(amount, domain = 'focus') {
                 if (!currentUser) return;
+                
+                // Update local state first
                 state.xp += amount;
                 
                 // Add XP to specific domain
@@ -750,9 +752,15 @@
                     state.level = newLevel;
                     state.evolutionStage = Math.min(7, state.evolutionStage+1);
                 }
+                
+                // Save to Firebase immediately
                 await saveState();
+                
+                // Update UI after successful save
                 updateNavLevel();
                 updateFocusXPDisplay();
+                
+                console.log(`Added ${amount} ${domain} XP. Total ${domain}XP: ${state[domainXPKey]}`);
             }
 
             async function applyMetrics(f,m,s,e,r) {
@@ -920,7 +928,7 @@
                 }
             }
 
-            function stopExercise() {
+            async function stopExercise() {
                 if (!exerciseActive) return;
                 exerciseActive = false;
                 clearTimeout(focusTimer);
@@ -934,15 +942,20 @@
                 const resistance = d.distractionsShown>0 ? d.distractionsResisted/d.distractionsShown*100 : 100;
                 const sessionFocus = Math.min(100, accuracy*0.7 + resistance*0.3);
                 const sessionStability = Math.min(100, 100-falseRate);
-                applyMetrics(sessionFocus, 0, sessionStability, 0, resistance);
+                
+                // Calculate XP
                 const xp = d.hits*15 + d.distractionsResisted*20;
-                addXP(xp, 'focus');
+                
+                // Apply metrics and add XP (awaited to ensure Firebase update)
+                await applyMetrics(sessionFocus, 0, sessionStability, 0, resistance);
+                await addXP(xp, 'focus');
+                
+                // Update streak and session history
                 updateStreak();
                 state.totalSessions++;
                 state.sessionHistory.push({type:'focus', date:new Date().toISOString(), accuracy, falseRate, resistance, hits:d.hits, xp});
-                saveState();
-                updateNavLevel();
-                updateFocusXPDisplay();
+                await saveState();
+                
                 showSummary({accuracy, falseRate, resistance, hits:d.hits, misses:d.misses, xp});
             }
 

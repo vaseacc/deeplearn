@@ -75,6 +75,11 @@ function defaultState() {
     totalSessions: 0,
     streak: 0,
     lastSessionDate: null,
+    focusXP: 0,
+    memoryXP: 0,
+    stabilityXP: 0,
+    enduranceXP: 0,
+    resistanceXP: 0,
     metrics: { focus: 0, memory: 0, stability: 0, endurance: 0, resistance: 0 },
     evolutionStage: 0,
     sessionHistory: [],
@@ -87,7 +92,17 @@ async function loadUserState(userId) {
   const docRef = doc(db, "users", userId);
   const snap = await getDoc(docRef);
   if (snap.exists()) {
-    return { ...defaultState(), ...snap.data() };
+    const data = snap.data();
+    // Ensure domain XP fields exist for backward compatibility
+    return { 
+      ...defaultState(), 
+      ...data,
+      focusXP: data.focusXP || 0,
+      memoryXP: data.memoryXP || 0,
+      stabilityXP: data.stabilityXP || 0,
+      enduranceXP: data.enduranceXP || 0,
+      resistanceXP: data.resistanceXP || 0
+    };
   }
   return defaultState();
 }
