@@ -567,6 +567,294 @@
             background: var(--blue);
             box-shadow: 0 0 10px var(--blue-glow);
         }
+
+        /* Cognitive Skill Tree */
+        .skill-tree {
+            grid-column: 1/-1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            margin-top: 8px;
+        }
+        .skill-tree h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .skill-tree h3 svg {
+            width: 20px;
+            height: 20px;
+            color: var(--purple);
+        }
+        .skill-domains {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .skill-domain {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            transition: var(--transition);
+        }
+        .skill-domain:hover {
+            border-color: var(--border-glow);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .skill-domain-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .skill-domain-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .skill-domain-icon.focus { background: rgba(91, 141, 239, 0.2); }
+        .skill-domain-icon.memory { background: rgba(155, 109, 255, 0.2); }
+        .skill-domain-icon.stability { background: rgba(77, 217, 193, 0.2); }
+        .skill-domain-icon.endurance { background: rgba(245, 158, 11, 0.2); }
+        .skill-domain-icon.resistance { background: rgba(244, 114, 182, 0.2); }
+        .skill-domain-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .skill-domain-level {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .skill-nodes {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .skill-node {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .skill-node:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-glow);
+        }
+        .skill-node.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .skill-node.locked:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: transparent;
+        }
+        .skill-node-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .skill-node.unlocked .skill-node-dot {
+            background: var(--blue);
+            box-shadow: 0 0 8px var(--blue-glow);
+        }
+        .skill-node.mastered .skill-node-dot {
+            background: var(--purple);
+            box-shadow: 0 0 12px var(--purple-glow);
+        }
+        .skill-node-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .skill-node-name {
+            font-size: 0.75rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .skill-node-desc {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        .skill-node.locked .skill-node-name,
+        .skill-node.locked .skill-node-desc {
+            color: var(--text-secondary);
+        }
+
+        /* Mind State Badge */
+        .mind-state-badge {
+            position: relative;
+            background: linear-gradient(135deg, rgba(91, 141, 239, 0.15), rgba(155, 109, 255, 0.1));
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .mind-state-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(91, 141, 239, 0.1) 0%, transparent 70%);
+            animation: mindStatePulse 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes mindStatePulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .mind-state-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 20px var(--blue-glow);
+        }
+        .mind-state-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .mind-state-title {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .mind-state-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        .mind-state-desc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Streak Multiplier */
+        .streak-multiplier {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(14, 14, 32, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .streak-multiplier.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .streak-multiplier-ring {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid rgba(91, 141, 239, 0.3);
+            border-top-color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            animation: streakRotate 2s linear infinite;
+        }
+        @keyframes streakRotate {
+            to { transform: rotate(360deg); }
+        }
+        .streak-multiplier-info {
+            flex: 1;
+        }
+        .streak-multiplier-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .streak-multiplier-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .skill-tree {
+                padding: 16px;
+            }
+            .skill-domains {
+                grid-template-columns: 1fr;
+            }
+            .mind-state-badge {
+                padding: 10px 12px;
+            }
+            .mind-state-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            .mind-state-value {
+                font-size: 1rem;
+            }
+            .streak-multiplier {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+            .streak-multiplier-ring {
+                width: 32px;
+                height: 32px;
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -638,12 +926,180 @@
             </a>
         </div>
 
-        <div style="grid-column:1/-1; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; backdrop-filter:blur(8px); margin-top:8px;">
-            <div id="evoStages" style="margin-bottom:8px;"></div>
-            <div style="display:flex; gap:20px; font-size:0.8rem; color:var(--text-secondary);">
-                <span>Sessions: <strong id="sessionCount" style="color:#fff;">0</strong></span>
-                <span>Total XP: <strong id="totalXPEvo" style="color:#fff;">0</strong></span>
-                <span>Streak: <strong id="streakDaysEvo" style="color:var(--amber);">0</strong> days</span>
+        <!-- Mind State Badge -->
+        <div class="mind-state-badge" style="grid-column: 1/-1;" id="mindStateBadge">
+            <div class="mind-state-icon">🧠</div>
+            <div class="mind-state-content">
+                <div class="mind-state-title">Current Mind State</div>
+                <div class="mind-state-value" id="mindStateValue">Awakening</div>
+                <div class="mind-state-desc" id="mindStateDesc">Your neural pathways are beginning to activate. Complete sessions to strengthen connections.</div>
+            </div>
+        </div>
+
+        <!-- Cognitive Skill Tree -->
+        <section class="skill-tree" id="skillTree">
+            <h3>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Cognitive Skill Tree
+            </h3>
+            <div class="skill-domains" id="skillDomains">
+                <!-- Focus Domain -->
+                <div class="skill-domain">
+                    <div class="skill-domain-header">
+                        <div class="skill-domain-icon focus">🎯</div>
+                        <div>
+                            <div class="skill-domain-name">Focus</div>
+                            <div class="skill-domain-level" id="focusLevel">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="skill-nodes" id="focusNodes">
+                        <div class="skill-node unlocked">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Basic Attention</div>
+                                <div class="skill-node-desc">Complete 5 focus sessions</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="focusNode2">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Distraction Shield</div>
+                                <div class="skill-node-desc">90% accuracy for 3 sessions</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="focusNode3">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Flow State</div>
+                                <div class="skill-node-desc">10-min perfect streak</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Memory Domain -->
+                <div class="skill-domain">
+                    <div class="skill-domain-header">
+                        <div class="skill-domain-icon memory">🧠</div>
+                        <div>
+                            <div class="skill-domain-name">Memory</div>
+                            <div class="skill-domain-level" id="memoryLevel">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="skill-nodes" id="memoryNodes">
+                        <div class="skill-node unlocked">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Sequence Recall</div>
+                                <div class="skill-node-desc">Memorize 5-item sequences</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="memoryNode2">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Pattern Master</div>
+                                <div class="skill-node-desc">80% accuracy on patterns</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="memoryNode3">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Chess Mind</div>
+                                <div class="skill-node-desc">Hold 7+ variables</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stability Domain -->
+                <div class="skill-domain">
+                    <div class="skill-domain-header">
+                        <div class="skill-domain-icon stability">💎</div>
+                        <div>
+                            <div class="skill-domain-name">Stability</div>
+                            <div class="skill-domain-level" id="stabilityLevel">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="skill-nodes" id="stabilityNodes">
+                        <div class="skill-node unlocked">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Emotional Control</div>
+                                <div class="skill-node-desc">Maintain calm under pressure</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="stabilityNode2">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Steady Focus</div>
+                                <div class="skill-node-desc">Low variance in performance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endurance Domain -->
+                <div class="skill-domain">
+                    <div class="skill-domain-header">
+                        <div class="skill-domain-icon endurance">⏳</div>
+                        <div>
+                            <div class="skill-domain-name">Endurance</div>
+                            <div class="skill-domain-level" id="enduranceLevel">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="skill-nodes" id="enduranceNodes">
+                        <div class="skill-node unlocked">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Sustained Attention</div>
+                                <div class="skill-node-desc">Complete 5-min session</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="enduranceNode2">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Deep Focus</div>
+                                <div class="skill-node-desc">15-min uninterrupted run</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resistance Domain -->
+                <div class="skill-domain">
+                    <div class="skill-domain-header">
+                        <div class="skill-domain-icon resistance">🛡️</div>
+                        <div>
+                            <div class="skill-domain-name">Resistance</div>
+                            <div class="skill-domain-level" id="resistanceLevel">Level 1</div>
+                        </div>
+                    </div>
+                    <div class="skill-nodes" id="resistanceNodes">
+                        <div class="skill-node unlocked">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Distraction Block</div>
+                                <div class="skill-node-desc">Ignore first distraction</div>
+                            </div>
+                        </div>
+                        <div class="skill-node locked" id="resistanceNode2">
+                            <div class="skill-node-dot"></div>
+                            <div class="skill-node-info">
+                                <div class="skill-node-name">Interception</div>
+                                <div class="skill-node-desc">Deflect 10 distractions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Streak Multiplier Badge -->
+        <div class="streak-multiplier" id="streakMultiplier">
+            <div class="streak-multiplier-ring" id="streakRing">1x</div>
+            <div class="streak-multiplier-info">
+                <div class="streak-multiplier-label">Perfect Streak</div>
+                <div class="streak-multiplier-value" id="streakValue">Keep it going!</div>
             </div>
         </div>
     </div>
@@ -715,14 +1171,100 @@
                     document.getElementById('stat'+name).textContent = Math.round(m[key]) + '%';
                     document.getElementById('bar'+name).style.width = Math.round(m[key]) + '%';
                 });
-                document.getElementById('sessionCount').textContent = state.totalSessions;
-                document.getElementById('totalXPEvo').textContent = state.xp;
-                document.getElementById('streakDaysEvo').textContent = state.streak;
 
+                // Update Mind State Badge
+                updateMindState(state.evolutionStage, m);
+
+                // Update Skill Tree
+                updateSkillTree(state);
+
+                // Update Streak Multiplier
+                updateStreakMultiplier(state.streak);
+            }
+
+            function updateMindState(stage, metrics) {
                 const stages = ['Inactive','Awakening','Connecting','Coherent','Resilient','Flowing','Harmonic','Transcendent'];
-                const container = document.getElementById('evoStages');
-                container.innerHTML = stages.map((s,i) => `<span class="evo-dot${i<=state.evolutionStage?' unlocked':''}" title="${s}"></span>`).join('') +
-                    `<span style="font-size:0.7rem;color:var(--text-secondary);margin-left:6px;">${stages[state.evolutionStage]}</span>`;
+                const stageNames = stages[Math.min(stage, stages.length - 1)];
+                const stageDescs = [
+                    'Your journey begins. Complete your first session to activate neural pathways.',
+                    'Neural pathways are awakening. Keep training to strengthen connections.',
+                    'Connections are forming between brain regions. Consistency is key.',
+                    'Your mind is achieving coherence. Focus and memory improve together.',
+                    'Mental resilience building. You can maintain focus under pressure.',
+                    'You\'re entering flow states more easily. Training feels natural.',
+                    'Harmonic balance across all cognitive domains. Peak performance approaching.',
+                    'Transcendent mental state. You\'ve mastered the art of focused awareness.'
+                ];
+                
+                const valueEl = document.getElementById('mindStateValue');
+                const descEl = document.getElementById('mindStateDesc');
+                if (valueEl) valueEl.textContent = stageNames;
+                if (descEl) descEl.textContent = stageDescs[Math.min(stage, stageDescs.length - 1)];
+            }
+
+            function updateSkillTree(state) {
+                const m = state.metrics;
+                const sessions = state.totalSessions;
+                
+                // Update domain levels based on metrics
+                const domainLevels = {
+                    focus: Math.floor(m.focus / 20) + 1,
+                    memory: Math.floor(m.memory / 20) + 1,
+                    stability: Math.floor(m.stability / 20) + 1,
+                    endurance: Math.floor(m.endurance / 20) + 1,
+                    resistance: Math.floor(m.resistance / 20) + 1
+                };
+
+                ['focus', 'memory', 'stability', 'endurance', 'resistance'].forEach(domain => {
+                    const levelEl = document.getElementById(`${domain}Level`);
+                    if (levelEl) levelEl.textContent = `Level ${Math.min(domainLevels[domain], 10)}`;
+                });
+
+                // Unlock nodes based on achievements
+                // Focus nodes
+                if (sessions >= 5) unlockNode('focusNode2');
+                if (state.perfectStreaks && state.perfectStreaks >= 3) unlockNode('focusNode3');
+                
+                // Memory nodes
+                if (m.memory >= 80) unlockNode('memoryNode2');
+                if (m.memory >= 90) unlockNode('memoryNode3');
+                
+                // Stability nodes
+                if (m.stability >= 75) unlockNode('stabilityNode2');
+                
+                // Endurance nodes
+                if (state.longestSession && state.longestSession >= 15) unlockNode('enduranceNode2');
+                
+                // Resistance nodes
+                if (state.distractionsResisted && state.distractionsResisted >= 10) unlockNode('resistanceNode2');
+            }
+
+            function unlockNode(nodeId) {
+                const node = document.getElementById(nodeId);
+                if (node && node.classList.contains('locked')) {
+                    node.classList.remove('locked');
+                    node.classList.add('unlocked');
+                }
+            }
+
+            function updateStreakMultiplier(streak) {
+                const multiplierEl = document.getElementById('streakMultiplier');
+                const ringEl = document.getElementById('streakRing');
+                const valueEl = document.getElementById('streakValue');
+                
+                if (!multiplierEl || !ringEl || !valueEl) return;
+                
+                const multiplier = Math.min(Math.floor(streak / 3) + 1, 5);
+                const messages = ['Keep it going!', 'On fire!', 'Unstoppable!', 'Legendary!', 'God mode!'];
+                
+                ringEl.textContent = `${multiplier}x`;
+                valueEl.textContent = streak >= 3 ? messages[Math.min(multiplier - 1, messages.length - 1)] : 'Build your streak';
+                
+                if (streak >= 3) {
+                    multiplierEl.classList.add('visible');
+                } else {
+                    multiplierEl.classList.remove('visible');
+                }
             }
 
             // Brain canvas
