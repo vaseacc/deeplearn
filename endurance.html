@@ -90,60 +90,116 @@
         
         /* Profile button styles */
         .nav-profile {
-            display:flex; align-items:center; gap:8px;
-            background:var(--surface-light); padding:5px 10px 5px 5px;
-            border-radius:22px; border:1px solid var(--border); cursor:pointer; white-space:nowrap;
-            transition:var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-light);
+            padding: 4px 10px 4px 4px;
+            border-radius: 22px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
+            position: relative;
         }
         .nav-profile:hover {
             border-color: var(--border-glow);
             background: rgba(22, 22, 48, 0.9);
+            transform: translateY(-1px);
+        }
+        .nav-profile:active {
+            transform: translateY(0);
         }
         .nav-profile .avatar {
-            width:28px; height:28px; border-radius:50%;
-            background:linear-gradient(135deg, var(--purple), var(--blue));
-            display:flex; align-items:center; justify-content:center;
-            font-size:0.7rem; font-weight:700; color:#fff;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(91, 141, 239, 0.3);
+        }
+        .nav-profile .level-tag {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.2px;
+            transition: opacity 0.2s ease;
+        }
+        .nav-profile .level-tag strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        .nav-profile .dropdown-arrow {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.6;
             flex-shrink: 0;
         }
-        .nav-profile .level-tag { font-size:0.75rem; color:var(--text-secondary); letter-spacing:0.2px; }
-        .nav-profile .level-tag strong { color:#fff; font-weight:600; }
-        .nav-profile .dropdown-arrow { transition:transform 0.2s ease; opacity: 0.7; }
-        .nav-profile.active .dropdown-arrow { transform:rotate(180deg); opacity: 1; }
+        .nav-profile.active .dropdown-arrow {
+            transform: rotate(180deg);
+            opacity: 1;
+        }
 
         /* Profile dropdown menu */
         .profile-dropdown {
-            position:absolute; top:calc(100% + 8px); right:12px;
-            background:rgba(14,14,32,0.98); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-            border:1px solid var(--border); border-radius:12px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.6); padding:8px; z-index:1000;
-            min-width: 140px;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: rgba(14, 14, 32, 0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            padding: 6px;
+            z-index: 1000;
+            min-width: 150px;
             opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            transform: translateY(-8px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
         }
         .profile-dropdown.open {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
             pointer-events: auto;
         }
-        .profile-dropdown.hidden { display:none; }
+        .profile-dropdown.hidden {
+            display: none;
+        }
         .profile-dropdown button {
-            background:transparent; border:none; color:var(--text-secondary);
-            padding:10px 16px; border-radius:8px; cursor:pointer;
-            font-size:0.85rem; font-family:var(--font); transition:var(--transition);
-            width:100%; text-align:left;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: var(--font);
+            transition: all 0.15s ease;
+            width: 100%;
+            text-align: left;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .profile-dropdown button:hover { background:rgba(255,255,255,0.08); color:#fff; }
+        .profile-dropdown button:hover {
+            background: rgba(91, 141, 239, 0.15);
+            color: #fff;
+        }
+        .profile-dropdown button:active {
+            background: rgba(91, 141, 239, 0.25);
+        }
         .profile-dropdown button svg {
             width: 16px;
             height: 16px;
             opacity: 0.7;
+            flex-shrink: 0;
         }
 
         /* Mobile hamburger menu */
@@ -155,11 +211,15 @@
             padding: 8px;
             cursor: pointer;
             color: var(--text-secondary);
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
         .nav-menu-toggle:hover {
             border-color: var(--border-glow);
             color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .nav-menu-toggle:active {
+            transform: scale(0.95);
         }
         .nav-menu-toggle svg {
             width: 22px;
@@ -173,78 +233,94 @@
                 flex-wrap: wrap;
                 height: auto;
                 min-height: var(--nav-height, 56px);
+                gap: 8px;
             }
             .nav-logo {
-                font-size: 1.1rem;
+                font-size: 1.05rem;
             }
             .logo-dot {
-                width: 22px;
-                height: 22px;
+                width: 20px;
+                height: 20px;
             }
             .nav-menu-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 margin-left: auto;
-            }
-            .nav-links {
-                order: 3;
-                flex-basis: 100%;
-                flex-direction: column;
-                gap: 2px;
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease;
-                margin-top: 8px;
-                padding: 0 8px;
-            }
-            .nav-links.open {
-                max-height: 300px;
-            }
-            .nav-links a {
-                padding: 10px 14px;
-                border-radius: 10px;
-                text-align: center;
+                order: 2;
             }
             .nav-profile {
-                order: 2;
-                padding: 4px 8px 4px 4px;
+                order: 3;
+                padding: 3px 8px 3px 3px;
             }
             .nav-profile .avatar {
-                width: 26px;
-                height: 26px;
-                font-size: 0.65rem;
-            }
-            .nav-profile .level-tag {
+                width: 28px;
+                height: 28px;
                 font-size: 0.7rem;
             }
+            .nav-profile .level-tag {
+                font-size: 0.68rem;
+            }
+            .nav-links {
+                order: 4;
+                flex-basis: 100%;
+                flex-direction: column;
+                gap: 4px;
+                max-height: 0;
+                overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                margin-top: 4px;
+                padding: 0;
+                opacity: 0;
+            }
+            .nav-links.open {
+                max-height: 350px;
+                opacity: 1;
+                margin-top: 8px;
+            }
+            .nav-links a {
+                padding: 12px 16px;
+                border-radius: 10px;
+                text-align: center;
+                background: rgba(255, 255, 255, 0.02);
+                margin: 2px 0;
+            }
+            .nav-links a:active {
+                background: rgba(255, 255, 255, 0.06);
+            }
             .profile-dropdown {
-                right: 8px;
-                min-width: 130px;
+                right: 0;
+                min-width: 140px;
             }
         }
 
         @media (max-width: 480px) {
+            nav {
+                padding: 6px 10px;
+            }
             .nav-logo {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
             .logo-dot {
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
             }
             .nav-profile .level-tag {
                 display: none;
             }
             .nav-profile {
-                padding: 4px;
+                padding: 3px;
             }
             .nav-profile .avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 0.75rem;
+                width: 34px;
+                height: 34px;
+                font-size: 0.8rem;
             }
             .nav-profile .dropdown-arrow {
                 display: none;
+            }
+            .profile-dropdown {
+                right: -10px;
             }
         }
 
@@ -683,24 +759,41 @@
                     e.stopPropagation();
                     const isOpen = profileDropdown.classList.contains('open');
                     if (isOpen) {
-                        profileDropdown.classList.add('hidden');
-                        profileDropdown.classList.remove('open');
-                        profileTrigger.classList.remove('active');
-                        profileTrigger.setAttribute('aria-expanded', 'false');
+                        closeDropdown();
                     } else {
-                        profileDropdown.classList.remove('hidden');
-                        profileDropdown.classList.add('open');
-                        profileTrigger.classList.add('active');
-                        profileTrigger.setAttribute('aria-expanded', 'true');
+                        openDropdown();
                     }
                 });
 
+                function openDropdown() {
+                    profileDropdown.classList.remove('hidden');
+                    requestAnimationFrame(() => {
+                        profileDropdown.classList.add('open');
+                        profileTrigger.classList.add('active');
+                        profileTrigger.setAttribute('aria-expanded', 'true');
+                    });
+                }
+
+                function closeDropdown() {
+                    profileDropdown.classList.remove('open');
+                    profileTrigger.classList.remove('active');
+                    profileTrigger.setAttribute('aria-expanded', 'false');
+                    setTimeout(() => {
+                        if (!profileDropdown.classList.contains('open')) {
+                            profileDropdown.classList.add('hidden');
+                        }
+                    }, 200);
+                }
+
                 document.addEventListener('click', (e) => {
                     if (!profileTrigger.contains(e.target) && !profileDropdown.contains(e.target)) {
-                        profileDropdown.classList.add('hidden');
-                        profileDropdown.classList.remove('open');
-                        profileTrigger.classList.remove('active');
-                        profileTrigger.setAttribute('aria-expanded', 'false');
+                        closeDropdown();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closeDropdown();
                     }
                 });
             }
@@ -709,7 +802,7 @@
                 signOutDropdownBtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
                     try {
-                        await import('./firebase.js').then(m => m.signOut());
+                        await window.signOut();
                         window.location.href = '/login';
                     } catch (err) {
                         console.error('Sign out error:', err);
