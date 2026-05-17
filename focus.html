@@ -675,6 +675,7 @@
         </div>
         <canvas id="vigilanceCanvas"></canvas>
         <div class="vigilance-instruction" id="vigilanceInstruction">Press SPACE when the core node flashes</div>
+        <button class="close-btn" id="closeVigilanceStartBtn" style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:12px 30px;background:rgba(77,217,193,0.15);border:1px solid rgba(77,217,193,0.4);color:#4dd9c1;border-radius:10px;cursor:pointer;font-size:14px;">End Session</button>
     </div>
 
     <script type="module">
@@ -988,10 +989,290 @@
             document.addEventListener('keydown', function(e) {
                 if ((e.key===' ' || e.key==='Enter') && exerciseActive) { e.preventDefault(); handleClick(); }
                 if (e.key==='Escape' && exerciseActive) stopExercise();
+                // Vigilance Orbit controls
+                if (e.key === ' ' && vigilanceActive) { 
+                    e.preventDefault(); 
+                    handleVigilanceInput(); 
+                }
+                if (e.key === 'Escape' && vigilanceActive) {
+                    stopVigilanceOrbit();
+                }
             });
+            
+            // Vigilance Orbit close button
+            const closeVigilanceBtn = document.getElementById('closeVigilanceBtn');
+            const closeVigilanceStartBtn = document.getElementById('closeVigilanceStartBtn');
+            if (closeVigilanceBtn) {
+                closeVigilanceBtn.addEventListener('click', stopVigilanceOrbit);
+            }
+            if (closeVigilanceStartBtn) {
+                closeVigilanceStartBtn.addEventListener('click', stopVigilanceOrbit);
+            }
 
             // Level selector buttons
             const levelButtons = document.querySelectorAll('.level-btn');
+            
+            // Vigilance Orbit Game Variables
+            let vigilanceActive = false;
+            let vigilanceAnimationId = null;
+            let vigilanceData = {
+                streak: 0,
+                score: 0,
+                coreAngle: 0,
+                coreOrbitRadius: 120,
+                decoys: [],
+                flashActive: false,
+                flashTimer: null,
+                nextFlashTime: 0,
+                canvas: null,
+                ctx: null
+            };
+            
+            function startVigilanceOrbit() {
+                const overlay = document.getElementById('vigilanceOverlay');
+                const canvas = document.getElementById('vigilanceCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size
+                function resizeCanvas() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+                
+                // Initialize decoys
+                vigilanceData = {
+                    streak: 0,
+                    score: 0,
+                    coreAngle: 0,
+                    coreOrbitRadius: Math.min(120, Math.floor(canvas.width * 0.15)),
+                    decoys: [
+                        { angle: Math.random() * Math.PI * 2, speed: 0.02 + Math.random() * 0.02, radius: Math.min(100, canvas.width * 0.12), color: 'rgba(100, 120, 140, 0.6)' },
+                        { angle: Math.random() * Math.PI * 2, speed: -0.015 - Math.random() * 0.015, radius: Math.min(140, canvas.width * 0.18), color: 'rgba(90, 110, 130, 0.5)' },
+                        { angle: Math.random() * Math.PI * 2, speed: 0.025 + Math.random() * 0.02, radius: Math.min(80, canvas.width * 0.1), color: 'rgba(110, 130, 150, 0.55)' }
+                    ],
+                    flashActive: false,
+                    flashTimer: null,
+                    nextFlashTime: Date.now() + 1500 + Math.random() * 2500,
+                    canvas: canvas,
+                    ctx: ctx,
+                    centerX: canvas.width / 2,
+                    centerY: canvas.height / 2
+                };
+                
+                vigilanceActive = true;
+                overlay.classList.remove('hidden');
+                updateVigilanceUI();
+                
+                // Start animation loop
+                animateVigilance();
+                
+                // Schedule first flash
+                scheduleNextFlash();
+            }
+            
+            function scheduleNextFlash() {
+                if (!vigilanceActive) return;
+                
+                const delay = 1500 + Math.random() * 2500; // 1.5 to 4 seconds
+                vigilanceData.flashTimer = setTimeout(() => {
+                    if (!vigilanceActive) return;
+                    
+                    vigilanceData.flashActive = true;
+                    vigilanceData.nextFlashTime = Date.now() + 150; // Flash lasts 150ms
+                    
+                    // Remove flash after 150ms
+                    setTimeout(() => {
+                        vigilanceData.flashActive = false;
+                    }, 150);
+                    
+                    // Schedule next flash
+                    scheduleNextFlash();
+                }, delay);
+            }
+            
+            function animateVigilance() {
+                if (!vigilanceActive) return;
+                
+                const { ctx, canvas, centerX, centerY, coreOrbitRadius, decoys } = vigilanceData;
+                
+                // Clear canvas
+                ctx.fillStyle = '#0a0a0e';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw orbit line (dotted cyan)
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(77, 217, 193, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 10]);
+                ctx.arc(centerX, centerY, coreOrbitRadius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Update and draw decoys
+                decoys.forEach(decoy => {
+                    decoy.angle += decoy.speed;
+                    const x = centerX + Math.cos(decoy.angle) * decoy.radius;
+                    const y = centerY + Math.sin(decoy.angle) * decoy.radius;
+                    
+                    // Decoy node (dim grey-blue)
+                    ctx.beginPath();
+                    ctx.fillStyle = decoy.color;
+                    ctx.arc(x, y, 12, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                // Update core angle
+                vigilanceData.coreAngle += 0.03;
+                const coreX = centerX + Math.cos(vigilanceData.coreAngle) * coreOrbitRadius;
+                const coreY = centerY + Math.sin(vigilanceData.coreAngle) * coreOrbitRadius;
+                
+                // Draw core node
+                if (vigilanceData.flashActive) {
+                    // Flash: piercing neon white-cyan
+                    ctx.beginPath();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.shadowColor = '#00f0ff';
+                    ctx.shadowBlur = 30;
+                    ctx.arc(coreX, coreY, 16, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                } else {
+                    // Normal: bright cyan with glow
+                    ctx.beginPath();
+                    ctx.fillStyle = '#4dd9c1';
+                    ctx.shadowColor = '#00f0ff';
+                    ctx.shadowBlur = 15;
+                    ctx.arc(coreX, coreY, 14, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+                
+                vigilanceAnimationId = requestAnimationFrame(animateVigilance);
+            }
+            
+            function handleVigilanceInput() {
+                if (!vigilanceActive) return;
+                
+                if (vigilanceData.flashActive) {
+                    // Correct hit!
+                    vigilanceData.streak++;
+                    vigilanceData.score += 10 * vigilanceData.streak;
+                    
+                    // Show shockwave effect
+                    showVigilanceShockwave();
+                    
+                    updateVigilanceUI();
+                } else {
+                    // False alarm - broke focus
+                    vigilanceData.streak = 0;
+                    vigilanceData.score = Math.max(0, vigilanceData.score - 15);
+                    
+                    // Show orbit break effect
+                    showVigilanceBreak();
+                    
+                    updateVigilanceUI();
+                }
+            }
+            
+            function showVigilanceShockwave() {
+                const { ctx, canvas, centerX, centerY } = vigilanceData;
+                let radius = 0;
+                const maxRadius = Math.max(canvas.width, canvas.height) * 0.6;
+                
+                function animateShockwave() {
+                    if (radius > maxRadius) return;
+                    
+                    // Redraw game state
+                    animateVigilance();
+                    
+                    // Draw shockwave
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(77, 217, 193, ${1 - radius/maxRadius})`;
+                    ctx.lineWidth = 3;
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    
+                    radius += 15;
+                    requestAnimationFrame(animateShockwave);
+                }
+                animateShockwave();
+            }
+            
+            function showVigilanceBreak() {
+                const { ctx, canvas, centerX, centerY, coreOrbitRadius } = vigilanceData;
+                
+                // Draw broken orbit line
+                ctx.beginPath();
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([10, 15]);
+                
+                // Draw jagged fragments
+                for (let i = 0; i < 8; i++) {
+                    const startAngle = (i / 8) * Math.PI * 2;
+                    const endAngle = startAngle + 0.3;
+                    ctx.arc(centerX, centerY, coreOrbitRadius, startAngle, endAngle);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                // Fade out after a second
+                setTimeout(() => {
+                    if (vigilanceActive) {
+                        animateVigilance();
+                    }
+                }, 1000);
+            }
+            
+            function updateVigilanceUI() {
+                document.getElementById('vigilanceStreak').textContent = vigilanceData.streak;
+                document.getElementById('vigilanceScore').textContent = vigilanceData.score;
+            }
+            
+            function stopVigilanceOrbit() {
+                vigilanceActive = false;
+                if (vigilanceAnimationId) {
+                    cancelAnimationFrame(vigilanceAnimationId);
+                }
+                if (vigilanceData.flashTimer) {
+                    clearTimeout(vigilanceData.flashTimer);
+                }
+                
+                const overlay = document.getElementById('vigilanceOverlay');
+                overlay.classList.add('hidden');
+                
+                // Calculate and save results
+                const xp = Math.floor(vigilanceData.score / 2) + (vigilanceData.streak * 5);
+                const accuracy = vigilanceData.streak > 0 ? Math.min(100, 70 + vigilanceData.streak * 2) : 30;
+                
+                // Save to Firebase
+                (async () => {
+                    await applyMetrics(accuracy, 0, 85, 0, 90);
+                    await addXP(xp, 'focus');
+                    updateStreak();
+                    state.totalSessions++;
+                    state.sessionHistory.push({
+                        type: 'focus-vigilance',
+                        date: new Date().toISOString(),
+                        score: vigilanceData.score,
+                        streak: vigilanceData.streak,
+                        xp
+                    });
+                    await saveState();
+                    
+                    showSummary({
+                        accuracy,
+                        resistance: 90,
+                        hits: vigilanceData.streak,
+                        misses: 0,
+                        xp,
+                        customTitle: 'Vigilance Orbit Complete'
+                    });
+                })();
+            }
+            
             levelButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const level = parseInt(this.getAttribute('data-level'));
