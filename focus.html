@@ -378,10 +378,29 @@
         <div class="score-live" id="liveScore">Score: 0 | Hits: 0 | Stability: 100%</div>
     </div>
 
-    <script>
+    <script type="module">
+        import { onAuthStateChanged, loadUserState, saveUserState } from './firebase.js';
+        
         (function() {
-            const STORAGE_KEY = 'neuroflow_v2';
             const XP_PER_LEVEL = 1000;
+            let currentUser = null;
+            let state = null;
+
+            // Initialize auth state listener
+            onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    state = await loadUserState(user.uid);
+                    updateNavLevel();
+                    updateSignOutVisibility(true);
+                } else {
+                    currentUser = null;
+                    state = null;
+                    updateNavLevel();
+                    updateSignOutVisibility(false);
+                    window.location.href = '/login';
+                }
+            });
 
             function defaultState() {
                 return {
@@ -391,19 +410,17 @@
                 };
             }
 
-            let state = loadState();
-
-            function loadState() {
+            async function saveState() {
+                if (!currentUser || !state) return;
                 try {
-                    const raw = localStorage.getItem(STORAGE_KEY);
-                    if (raw) { const saved = JSON.parse(raw); return {...defaultState(), ...saved}; }
-                } catch(e) {}
-                return defaultState();
+                    await saveUserState(currentUser.uid, state);
+                } catch(e) {
+                    console.error('Failed to save state:', e);
+                }
             }
 
-            function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {} }
-
-            function updateStreak() {
+            async function updateStreak() {
+                if (!currentUser) return;
                 const today = new Date().toISOString().slice(0,10);
                 if (state.lastSessionDate === today) return;
                 if (state.lastSessionDate) {
@@ -413,20 +430,23 @@
                     state.streak = 1;
                 }
                 state.lastSessionDate = today;
-                saveState();
+                await saveState();
             }
 
-            function addXP(amount) {
+            async function addXP(amount) {
+                if (!currentUser) return;
                 state.xp += amount;
                 const newLevel = Math.floor(state.xp / XP_PER_LEVEL);
                 if (newLevel > state.level) {
                     state.level = newLevel;
                     state.evolutionStage = Math.min(7, state.evolutionStage+1);
                 }
-                saveState();
+                await saveState();
+                updateNavLevel();
             }
 
-            function applyMetrics(f,m,s,e,r) {
+            async function applyMetrics(f,m,s,e,r) {
+                if (!currentUser) return;
                 const alpha = 0.35;
                 state.metrics.focus = state.metrics.focus*(1-alpha) + f*alpha;
                 state.metrics.memory = state.metrics.memory*(1-alpha) + m*alpha;
@@ -434,11 +454,21 @@
                 state.metrics.endurance = state.metrics.endurance*(1-alpha) + e*alpha;
                 state.metrics.resistance = state.metrics.resistance*(1-alpha) + r*alpha;
                 Object.keys(state.metrics).forEach(k => state.metrics[k] = Math.min(100, Math.max(0, state.metrics[k])));
-                saveState();
+                await saveState();
             }
 
             function updateNavLevel() {
-                document.getElementById('navLevel').textContent = state.level;
+                const levelEl = document.getElementById('navLevel');
+                if (levelEl && state) {
+                    levelEl.textContent = state.level;
+                }
+            }
+
+            function updateSignOutVisibility(isSignedIn) {
+                const signOutBtn = document.getElementById('signOutDropdownBtn');
+                if (signOutBtn) {
+                    signOutBtn.style.display = isSignedIn ? 'flex' : 'none';
+                }
             }
 
             let exerciseActive = false;
@@ -648,7 +678,7 @@
                 signOutDropdownBtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
                     try {
-                        await window.signOut();
+                        await import('./firebase.js').then(m => m.signOut());
                         window.location.href = '/login';
                     } catch (err) {
                         console.error('Sign out error:', err);

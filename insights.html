@@ -311,9 +311,30 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { onAuthStateChanged, loadUserState } from './firebase.js';
+        
         (function() {
-            const STORAGE_KEY = 'neuroflow_v2';
+            let currentUser = null;
+            let state = null;
+
+            // Initialize auth state listener
+            onAuthStateChanged(async (user) => {
+                if (user) {
+                    currentUser = user;
+                    state = await loadUserState(user.uid);
+                    updateNavLevel();
+                    updateSignOutVisibility(true);
+                    generateInsights();
+                    renderProgressStats();
+                } else {
+                    currentUser = null;
+                    state = null;
+                    updateNavLevel();
+                    updateSignOutVisibility(false);
+                    window.location.href = '/login';
+                }
+            });
 
             function defaultState() {
                 return {
@@ -323,18 +344,18 @@
                 };
             }
 
-            let state = loadState();
-
-            function loadState() {
-                try {
-                    const raw = localStorage.getItem(STORAGE_KEY);
-                    if (raw) { const saved = JSON.parse(raw); return {...defaultState(), ...saved}; }
-                } catch(e) {}
-                return defaultState();
+            function updateNavLevel() {
+                const levelEl = document.getElementById('navLevel');
+                if (levelEl && state) {
+                    levelEl.textContent = state.level;
+                }
             }
 
-            function updateNavLevel() {
-                document.getElementById('navLevel').textContent = state.level;
+            function updateSignOutVisibility(isSignedIn) {
+                const signOutBtn = document.getElementById('signOutDropdownBtn');
+                if (signOutBtn) {
+                    signOutBtn.style.display = isSignedIn ? 'flex' : 'none';
+                }
             }
 
             function generateInsights() {
@@ -454,9 +475,49 @@
                 `;
             }
 
-            updateNavLevel();
-            generateInsights();
-            renderProgressStats();
+            // Profile dropdown functionality
+            const profileTrigger = document.getElementById('profileTrigger');
+            const profileDropdown = document.getElementById('profileDropdown');
+            const signOutDropdownBtn = document.getElementById('signOutDropdownBtn');
+
+            if (profileTrigger && profileDropdown) {
+                profileTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = profileDropdown.classList.contains('open');
+                    if (isOpen) {
+                        profileDropdown.classList.add('hidden');
+                        profileDropdown.classList.remove('open');
+                        profileTrigger.classList.remove('active');
+                        profileTrigger.setAttribute('aria-expanded', 'false');
+                    } else {
+                        profileDropdown.classList.remove('hidden');
+                        profileDropdown.classList.add('open');
+                        profileTrigger.classList.add('active');
+                        profileTrigger.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!profileTrigger.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.add('hidden');
+                        profileDropdown.classList.remove('open');
+                        profileTrigger.classList.remove('active');
+                        profileTrigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+            if (signOutDropdownBtn) {
+                signOutDropdownBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    try {
+                        await import('./firebase.js').then(m => m.signOut());
+                        window.location.href = '/login';
+                    } catch (err) {
+                        console.error('Sign out error:', err);
+                    }
+                });
+            }
         })();
     </script>
 </body>
