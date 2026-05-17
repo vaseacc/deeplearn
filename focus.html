@@ -691,11 +691,13 @@
                     currentUser = user;
                     state = await loadUserState(user.uid);
                     updateNavLevel();
+                    updateFocusXPDisplay();
                     updateSignOutVisibility(true);
                 } else {
                     currentUser = null;
                     state = null;
                     updateNavLevel();
+                    updateFocusXPDisplay();
                     updateSignOutVisibility(false);
                     window.location.href = '/login';
                 }
@@ -704,6 +706,7 @@
             function defaultState() {
                 return {
                     xp:0, level:0, totalSessions:0, streak:0, lastSessionDate:null,
+                    focusXP: 0, memoryXP: 0, stabilityXP: 0, enduranceXP: 0, resistanceXP: 0,
                     metrics:{focus:0, memory:0, stability:0, endurance:0, resistance:0},
                     evolutionStage:0, sessionHistory:[], forgeItems:[],
                 };
@@ -732,9 +735,16 @@
                 await saveState();
             }
 
-            async function addXP(amount) {
+            async function addXP(amount, domain = 'focus') {
                 if (!currentUser) return;
                 state.xp += amount;
+                
+                // Add XP to specific domain
+                const domainXPKey = `${domain}XP`;
+                if (state[domainXPKey] !== undefined) {
+                    state[domainXPKey] += amount;
+                }
+                
                 const newLevel = Math.floor(state.xp / XP_PER_LEVEL);
                 if (newLevel > state.level) {
                     state.level = newLevel;
@@ -742,6 +752,7 @@
                 }
                 await saveState();
                 updateNavLevel();
+                updateFocusXPDisplay();
             }
 
             async function applyMetrics(f,m,s,e,r) {
@@ -763,6 +774,35 @@
                 }
             }
 
+            function updateFocusXPDisplay() {
+                if (!state) return;
+                const focusXPEl = document.getElementById('focusXP');
+                const focusXPBarEl = document.getElementById('focusXPBar');
+                const unlockBtn = document.getElementById('unlockFocusL2');
+                
+                if (focusXPEl) {
+                    focusXPEl.textContent = state.focusXP || 0;
+                }
+                
+                if (focusXPBarEl) {
+                    const progress = Math.min(100, (state.focusXP / 300) * 100);
+                    focusXPBarEl.style.width = `${progress}%`;
+                }
+                
+                // Update Level 2 button lock status
+                if (unlockBtn) {
+                    if (state.focusXP >= 300) {
+                        unlockBtn.classList.remove('locked');
+                        unlockBtn.textContent = 'Level 2: Vigilance Orbit';
+                        unlockBtn.title = 'Click to unlock';
+                    } else {
+                        unlockBtn.classList.add('locked');
+                        unlockBtn.textContent = `Level 2: Vigilance Orbit 🔒 (${state.focusXP}/300 XP)`;
+                        unlockBtn.title = `Requires 300 Focus XP - You have ${state.focusXP} XP`;
+                    }
+                }
+            }
+
             function updateSignOutVisibility(isSignedIn) {
                 const signOutBtn = document.getElementById('signOutDropdownBtn');
                 if (signOutBtn) {
@@ -773,27 +813,41 @@
             let exerciseActive = false;
             let focusData = {};
             let focusTimer = null;
+            let currentLevel = 1; // Track which level is active
 
             function startExercise() {
                 if (exerciseActive) return;
+                
+                // Get current selected level
+                const activeBtn = document.querySelector('.level-btn.active');
+                currentLevel = activeBtn ? parseInt(activeBtn.getAttribute('data-level')) : 1;
+                
                 exerciseActive = true;
-                const symbols = ['▲','●','■','✦','◆','⬟','⬢','◈'];
-                focusData = {
-                    target: symbols[Math.floor(Math.random()*symbols.length)],
-                    symbols,
-                    hits:0, misses:0, falseAlarms:0, round:0, speed:1100,
-                    distractionsShown:0, distractionsResisted:0,
-                    performanceWindows:[],
-                    startTime: Date.now(),
-                };
-                document.getElementById('targetSymbol').textContent = focusData.target;
-                document.getElementById('liveScore').textContent = 'Score: 0 | Hits: 0 | Stability: 100%';
-                document.getElementById('taskDisplay').textContent = '●';
-                document.getElementById('taskDisplay').className = 'task-display';
-                document.getElementById('exerciseOverlay').classList.add('open');
-                document.getElementById('startBtn').classList.add('running');
-                document.getElementById('startBtn').textContent = 'Session Active...';
-                nextSymbol();
+                
+                if (currentLevel === 1) {
+                    // Level 1: Focus Anchor
+                    const symbols = ['▲','●','■','✦','◆','⬟','⬢','◈'];
+                    focusData = {
+                        target: symbols[Math.floor(Math.random()*symbols.length)],
+                        symbols,
+                        hits:0, misses:0, falseAlarms:0, round:0, speed:1100,
+                        distractionsShown:0, distractionsResisted:0,
+                        performanceWindows:[],
+                        startTime: Date.now(),
+                        mode: 'anchor'
+                    };
+                    document.getElementById('targetSymbol').textContent = focusData.target;
+                    document.getElementById('liveScore').textContent = 'Score: 0 | Hits: 0 | Stability: 100%';
+                    document.getElementById('taskDisplay').textContent = '●';
+                    document.getElementById('taskDisplay').className = 'task-display';
+                    document.getElementById('exerciseOverlay').classList.add('open');
+                    document.getElementById('startBtn').classList.add('running');
+                    document.getElementById('startBtn').textContent = 'Session Active...';
+                    nextSymbol();
+                } else if (currentLevel === 2) {
+                    // Level 2: Vigilance Orbit
+                    startVigilanceOrbit();
+                }
             }
 
             function nextSymbol() {
@@ -882,12 +936,13 @@
                 const sessionStability = Math.min(100, 100-falseRate);
                 applyMetrics(sessionFocus, 0, sessionStability, 0, resistance);
                 const xp = d.hits*15 + d.distractionsResisted*20;
-                addXP(xp);
+                addXP(xp, 'focus');
                 updateStreak();
                 state.totalSessions++;
                 state.sessionHistory.push({type:'focus', date:new Date().toISOString(), accuracy, falseRate, resistance, hits:d.hits, xp});
                 saveState();
                 updateNavLevel();
+                updateFocusXPDisplay();
                 showSummary({accuracy, falseRate, resistance, hits:d.hits, misses:d.misses, xp});
             }
 
@@ -922,7 +977,42 @@
                 if (e.key==='Escape' && exerciseActive) stopExercise();
             });
 
+            // Level selector buttons
+            const levelButtons = document.querySelectorAll('.level-btn');
+            levelButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const level = parseInt(this.getAttribute('data-level'));
+                    
+                    // Check if level is locked
+                    if (this.classList.contains('locked')) {
+                        // Show unlock requirement message
+                        alert(`Level ${level} requires 300 Focus XP. Keep training to unlock!`);
+                        return;
+                    }
+                    
+                    // Update active state
+                    levelButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update exercise description
+                    const descEl = document.getElementById('exerciseDesc');
+                    if (level === 1) {
+                        descEl.innerHTML = `
+                            <h3>Focus Anchor</h3>
+                            <p>Sustained attention training. A symbol stream appears — click only when the target symbol shows. Build your focus stability over time.</p>
+                        `;
+                    } else if (level === 2) {
+                        descEl.innerHTML = `
+                            <h3>🎯 Vigilance Orbit</h3>
+                            <p><strong>Advanced sustained attention training.</strong> Track the glowing cyan Core Node orbiting the center. Press SPACE only when it flashes white (150ms). Ignore the grey decoy nodes crossing its path. Tests your ability to maintain focus amid predictable background movement.</p>
+                            <p style=\"margin-top:8px;font-size:13px;opacity:0.8;\"><em>Based on Psychomotor Vigilance Task (PVT) and Multiple Object Tracking (MOT).</em></p>
+                        `;
+                    }
+                });
+            });
+
             updateNavLevel();
+            updateFocusXPDisplay();
 
             // Mobile menu toggle
             const navMenuToggle = document.getElementById('navMenuToggle');
