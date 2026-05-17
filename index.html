@@ -614,40 +614,54 @@
     </div>
 
     <script type="module">
-        import { signOut } from './firebase.js';
+        import { signOut, onAuthStateChanged, loadUserState, saveUserState, defaultState } from './firebase.js';
         window.signOut = signOut;
-    </script>
-    <script>
-        (function() {
-            const STORAGE_KEY = 'neuroflow_v2';
+        
+        // Auth check - redirect to login if not signed in
+        onAuthStateChanged((user) => {
+            if (!user) {
+                window.location.href = '/login';
+                return;
+            }
+            initApp(user.uid);
+        });
+        
+        function initApp(userId) {
             const XP_PER_LEVEL = 1000;
 
-            function defaultState() {
-                return {
-                    xp: 0,
-                    level: 0,
-                    totalSessions: 0,
-                    streak: 0,
-                    lastSessionDate: null,
-                    metrics: { focus: 0, memory: 0, stability: 0, endurance: 0, resistance: 0 },
-                    evolutionStage: 0,
-                    sessionHistory: [],
-                    forgeItems: [],
-                };
-            }
+            let state = defaultState();
 
-            let state = loadState();
-
-            function loadState() {
+            // Load state from Firebase
+            async function loadState() {
                 try {
-                    const raw = localStorage.getItem(STORAGE_KEY);
-                    if (raw) { const saved = JSON.parse(raw); return { ...defaultState(), ...saved }; }
-                } catch (e) {}
-                return defaultState();
+                    const saved = await loadUserState(userId);
+                    state = { ...defaultState(), ...saved };
+                } catch (e) {
+                    console.error('Error loading state:', e);
+                }
             }
 
-            function saveState() {
-                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+            // Save state to Firebase
+            async function saveState() {
+                try {
+                    await saveUserState(userId, state);
+                } catch (e) {
+                    console.error('Error saving state:', e);
+                }
+            }
+
+            function updateNavLevel() {
+                const levelEl = document.getElementById('navLevel');
+                if (levelEl) {
+                    levelEl.textContent = state.level;
+                }
+            }
+
+            function updateSignOutVisibility(isSignedIn) {
+                const signOutBtn = document.getElementById('signOutDropdownBtn');
+                if (signOutBtn) {
+                    signOutBtn.style.display = isSignedIn ? 'flex' : 'none';
+                }
             }
 
             function updateUI() {
@@ -798,9 +812,15 @@
 
             window.addEventListener('resize', () => { clearTimeout(window._resizeTO); window._resizeTO = setTimeout(initBrain, 250); });
 
-            updateUI();
-            initBrain();
-            brainAnimId = requestAnimationFrame(renderBrain);
+            // Initialize app - load data from Firebase then render
+            (async function init() {
+                await loadState();
+                updateUI();
+                updateNavLevel();
+                updateSignOutVisibility(true);
+                initBrain();
+                brainAnimId = requestAnimationFrame(renderBrain);
+            })();
 
             // Mobile menu toggle
             const navMenuToggle = document.getElementById('navMenuToggle');
@@ -862,7 +882,7 @@
                     }
                 });
             }
-        })();
+        }
     </script>
 </body>
 </html>
