@@ -987,15 +987,24 @@
                 if (e.target === this) handleClick();
             });
             document.addEventListener('keydown', function(e) {
-                if ((e.key===' ' || e.key==='Enter') && exerciseActive) { e.preventDefault(); handleClick(); }
-                if (e.key==='Escape' && exerciseActive) stopExercise();
-                // Vigilance Orbit controls
+                // Vigilance Orbit controls (Level 2) - takes priority
                 if (e.key === ' ' && vigilanceActive) { 
                     e.preventDefault(); 
                     handleVigilanceInput(); 
+                    return;
                 }
                 if (e.key === 'Escape' && vigilanceActive) {
                     stopVigilanceOrbit();
+                    return;
+                }
+                
+                // Level 1 controls
+                if ((e.key===' ' || e.key==='Enter') && exerciseActive && !vigilanceActive) { 
+                    e.preventDefault(); 
+                    handleClick(); 
+                }
+                if (e.key==='Escape' && exerciseActive && !vigilanceActive) { 
+                    stopExercise(); 
                 }
             });
             
